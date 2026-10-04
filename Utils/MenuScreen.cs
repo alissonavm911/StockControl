@@ -1,8 +1,8 @@
 namespace StockControl.Utils
 {
-    public static class DrawScreen
+    public static class MenuScreen
     {
-        public static void DrawColor(ConsoleColor color1, ConsoleColor color2)
+        public static void MenuColor(ConsoleColor color1, ConsoleColor color2)
         {
             Console.Clear();
             Console.BackgroundColor = color1;
@@ -10,7 +10,7 @@ namespace StockControl.Utils
             Console.Clear();
         }
         
-        public static void DrawBorder(int lines, int columns)
+        public static void MenuBorder(int lines, int columns)
         {
             Console.Write("+");
             for (int i = 0; i < columns; i++)
