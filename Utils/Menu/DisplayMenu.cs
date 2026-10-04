@@ -2,15 +2,15 @@ namespace StockControl.Utils.Menu
 {
     public static class DisplayMenu
     {
-        public static void WriteOptions(Action<ConsoleColor, ConsoleColor> MenuColor, Action<int, int> MenuBorder)
+        public static void WriteOptions()
         {
             var backgroundColor = ConsoleColor.DarkCyan;
             var foregroundColor = ConsoleColor.White;
-            MenuColor(backgroundColor, foregroundColor);
+            MenuScreen.MenuColor(backgroundColor, foregroundColor);
             
             int lines = 11;
             int columns = 50;
-            MenuBorder(lines, columns);
+            MenuScreen.MenuBorder(lines, columns);
 
             var leftMargin = 4;
             Console.SetCursorPosition(leftMargin, 3);
