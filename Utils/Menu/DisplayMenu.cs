@@ -29,7 +29,6 @@ namespace StockControl.Utils.Menu
             Console.WriteLine("------------------------");
             Console.SetCursorPosition(leftMargin, 11);
             Console.Write("option: ");
-            Console.SetCursorPosition(0, 14);
             MenuHandler.HandleMenu(Console.ReadLine());
         }
     }
