@@ -1,4 +1,4 @@
-namespace StockControl.Utils
+namespace StockControl.Utils.Menu
 {
     public static class MenuScreen
     {
