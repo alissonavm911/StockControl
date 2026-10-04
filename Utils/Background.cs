@@ -1,6 +1,6 @@
 namespace StockControl.Utils.Menu
 {
-    public static class MenuScreen
+    public static class Background
     {
         public static void MenuColor(ConsoleColor color1, ConsoleColor color2)
         {
