@@ -1,4 +1,6 @@
-namespace StockControl.Utils.Menu
+using StockControl.Utils;
+
+namespace StockControl
 {
     public static class DisplayMenu
     {

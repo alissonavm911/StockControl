@@ -1,6 +1,4 @@
-﻿using StockControl.Utils.Menu;
-
-namespace StockControl
+﻿namespace StockControl
 {
     class Program
     {

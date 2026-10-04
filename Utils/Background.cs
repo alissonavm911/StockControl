@@ -1,4 +1,4 @@
-namespace StockControl.Utils.Menu
+namespace StockControl.Utils
 {
     public static class Background
     {
