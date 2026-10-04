@@ -10,7 +10,7 @@ namespace StockControl
             var foregroundColor = ConsoleColor.White;
             Background.MenuColor(backgroundColor, foregroundColor);
             
-            int lines = 11;
+            int lines = 18;
             int columns = 50;
             Background.MenuBorder(lines, columns);
 
@@ -25,11 +25,23 @@ namespace StockControl
             Console.WriteLine("2. Remove Product (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 7);
             Console.WriteLine("3. View Products (Not Implemented)");
+            Console.SetCursorPosition(leftMargin, 8);
+            Console.WriteLine("4. Update Product (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 9);
-            Console.WriteLine("0. Exit");
+            Console.WriteLine("5. Register Sale (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 10);
-            Console.WriteLine("------------------------");
+            Console.WriteLine("6. View Sales (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 11);
+            Console.WriteLine("7. Inventory Report (Not Implemented)");
+            Console.SetCursorPosition(leftMargin, 12);
+            Console.WriteLine("8. View Inventory (Not Implemented)");
+            Console.SetCursorPosition(leftMargin, 13);
+            Console.WriteLine("9. Financial Report (Not Implemented)");
+            Console.SetCursorPosition(leftMargin, 15);
+            Console.WriteLine("0. Exit");
+            Console.SetCursorPosition(leftMargin, 17);
+            Console.WriteLine("------------------------");
+            Console.SetCursorPosition(leftMargin, 18);
             Console.Write("option: ");
             MenuHandler.HandleMenu(Console.ReadLine());
         }

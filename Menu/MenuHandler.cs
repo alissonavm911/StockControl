@@ -17,9 +17,15 @@ namespace StockControl
 
             switch (optionInt)
             {
-                case 1: Console.WriteLine("Add Product selected (Not Implemented)"); break;
-                case 2: Console.WriteLine("View Products selected (Not Implemented)"); break;
-                case 3: Console.WriteLine("Update Product selected (Not Implemented)"); break;
+                case 1: break;
+                case 2: break;
+                case 3: break;
+                case 4: break;
+                case 5: break;
+                case 6: break;
+                case 7: break;
+                case 8: break;
+                case 9: break;
                 case 0: Console.WriteLine("Exit (Not Implemented)"); break;
             }
         }
