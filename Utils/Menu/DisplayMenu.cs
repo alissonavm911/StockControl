@@ -6,11 +6,11 @@ namespace StockControl.Utils.Menu
         {
             var backgroundColor = ConsoleColor.DarkCyan;
             var foregroundColor = ConsoleColor.White;
-            MenuScreen.MenuColor(backgroundColor, foregroundColor);
+            Background.MenuColor(backgroundColor, foregroundColor);
             
             int lines = 11;
             int columns = 50;
-            MenuScreen.MenuBorder(lines, columns);
+            Background.MenuBorder(lines, columns);
 
             var leftMargin = 4;
             Console.SetCursorPosition(leftMargin, 3);
@@ -30,6 +30,7 @@ namespace StockControl.Utils.Menu
             Console.SetCursorPosition(leftMargin, 11);
             Console.Write("option: ");
             Console.SetCursorPosition(0, 14);
+            MenuHandler.HandleMenu(Console.ReadLine());
         }
     }
 }
