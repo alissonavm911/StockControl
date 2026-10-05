@@ -1,8 +1,8 @@
 using StockControl.Utils;
 
-namespace StockControl.Menu
+namespace StockControl.Services
 {
-    class MenuHandler
+    class MenuService
     {
         public static void HandleMenu(string? option)
         {
