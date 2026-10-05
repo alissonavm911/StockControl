@@ -2,7 +2,7 @@ using StockControl.Utils;
 
 namespace StockControl.Models
 {
-    public struct Product
+    public record struct Product
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

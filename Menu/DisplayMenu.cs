@@ -24,9 +24,9 @@ namespace StockControl
             Console.SetCursorPosition(leftMargin, 6);
             Console.WriteLine("2. Remove Product (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 7);
-            Console.WriteLine("3. View Products (Not Implemented)");
+            Console.WriteLine("3. Update Product (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 8);
-            Console.WriteLine("4. Update Product (Not Implemented)");
+            Console.WriteLine("4. View Products (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 9);
             Console.WriteLine("5. Register Sale (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 10);
