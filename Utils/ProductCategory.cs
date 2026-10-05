@@ -11,6 +11,7 @@ namespace StockControl.Utils
         Sports = 7,
         Beauty = 8,
         Automotive = 9,
-        Health = 10
+        Health = 10, 
+        Other = 11
     }
 }
