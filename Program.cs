@@ -1,10 +1,12 @@
-﻿namespace StockControl
+﻿using StockControl.Controllers;
+
+namespace StockControl
 {
     class Program
     {
         static void Main()
         {
-            DisplayMenu.WriteOptions();
+            MenuController.Menu();
         }
     }
 }
