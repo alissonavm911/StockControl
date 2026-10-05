@@ -1,6 +1,6 @@
 using StockControl.Utils;
 
-namespace StockControl
+namespace StockControl.Menu
 {
     class MenuHandler
     {

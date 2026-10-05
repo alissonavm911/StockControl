@@ -1,3 +1,5 @@
+using StockControl.Menu;
+
 namespace StockControl.Controllers
 {
     public class MenuController
