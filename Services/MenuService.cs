@@ -1,5 +1,6 @@
 using StockControl.Utils;
 using StockControl.Controllers;
+using StockControl.Exceptions;
 
 namespace StockControl.Services
 {
@@ -7,16 +8,9 @@ namespace StockControl.Services
     {
         public static void HandleMenu(string? option)
         {
-            if (!int.TryParse(option, out int optionInt))
-            {
-                Console.Clear();
-                Background.MenuBorder(10, 50);
-                Console.SetCursorPosition(4, 3);
-                Console.WriteLine("Invalid option. Please enter a valid number.");
-                Console.SetCursorPosition(0, 12);
-            }
+            uint optionSelected = uint.TryParse(option, out uint optionInt) ? optionInt : 10;
 
-            switch (optionInt)
+            switch (optionSelected)
             {
                 case 1: ProductController.AddProduct(); break;
                 case 2: break;
@@ -27,7 +21,8 @@ namespace StockControl.Services
                 case 7: break;
                 case 8: break;
                 case 9: break;
-                case 0: Exit.ExitProgram(); break;
+                case 0: Exit.ExitProgram(); break; 
+                default: throw new OptionNotFoundException("Option not found. Please enter a valid option.");
             }
         }
     }
