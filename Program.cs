@@ -1,4 +1,6 @@
 ﻿using StockControl.Controllers;
+using StockControl.Exceptions;
+using StockControl.Handlers;
 
 namespace StockControl
 {
@@ -6,7 +8,13 @@ namespace StockControl
     {
         static void Main()
         {
-            MenuController.Menu();
+            try {
+                MenuController.Menu();
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new InitializeSystemException(ex.Message));
+            }
         }
     }
 }

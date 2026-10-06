@@ -13,8 +13,26 @@ namespace StockControl.Handlers
                 case ProductInformationInvalidException:
                     ExceptionPrefixMessage("Invalid product information", ex);
                     break;
-                case ProductNotFoundByIdException:
-                    ExceptionPrefixMessage("Product not found by ID", ex);
+                case ArgumentNullException:
+                    ExceptionPrefixMessage("Product null", ex);
+                    break;
+                case ProductNotFoundException:
+                    ExceptionPrefixMessage("Product not found", ex);
+                    break;
+                case ErrorOperationException:
+                    ExceptionPrefixMessage("Error in operation", ex);
+                    break;
+                case ExitException:
+                    ExceptionPrefixMessage("Error while exiting the program", ex);
+                    break;
+                case InitializeStockException:
+                    ExceptionPrefixMessage("Error while initializing stock", ex);
+                    break;
+                case InitializeSystemException:
+                    ExceptionPrefixMessage("Error while initializing system", ex);
+                    break;
+                case OptionNotFoundException:
+                    ExceptionPrefixMessage("Option not found", ex);
                     break;
                 default:
                     ExceptionPrefixMessage("An error occurred", ex);
@@ -27,7 +45,7 @@ namespace StockControl.Handlers
             Console.Clear();
             Background.MenuColor(ConsoleColor.DarkRed, ConsoleColor.White);
             Console.Clear();
-            Background.MenuBorder(5, 50);
+            Background.MenuBorder(5, 100);
             Console.SetCursorPosition(4, 2);
             Console.WriteLine($"{message}: {ex.Message}");
             Console.SetCursorPosition(4, 3);

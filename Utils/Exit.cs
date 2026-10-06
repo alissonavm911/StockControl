@@ -1,3 +1,6 @@
+using StockControl.Exceptions;
+using StockControl.Handlers;
+
 namespace StockControl.Utils
 {
     public static class Exit
@@ -9,13 +12,20 @@ namespace StockControl.Utils
             Console.SetCursorPosition(3, 2);
             Console.WriteLine("Exiting the program...");
             Thread.Sleep(2000);
-            
+
             Console.Clear();
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Clear();    
-            
-            Environment.Exit(0);
+            Console.Clear();
+
+            try
+            {
+                Environment.Exit(0);
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ExitException(ex.Message));
+            }
         }
     }
 }
