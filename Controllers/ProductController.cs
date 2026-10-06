@@ -1,3 +1,5 @@
+using StockControl.Exceptions;
+using StockControl.Handlers;
 using StockControl.Utils;
 using StockControl.Models;
 using StockControl.Services;
@@ -27,7 +29,7 @@ namespace StockControl.Controllers
             decimal? price = decimal.TryParse(Console.ReadLine(), out decimal parsedPrice) ? parsedPrice : null;
             Console.Write("Enter product quantity: ");
             Console.SetCursorPosition(leftMargin, 8);
-            int? quantity = int.TryParse(Console.ReadLine(), out int parsedQuantity) ? parsedQuantity : null;
+            uint? quantity = uint.TryParse(Console.ReadLine(), out uint parsedQuantity) ? parsedQuantity : null;
 
             Console.Clear();
             Background.MenuBorder(18, 50);
@@ -44,24 +46,31 @@ namespace StockControl.Controllers
             
             var productDto = new ProductDto()
             {
-                Name = name,
+                Name = name?.Trim(),
                 Price = price,
                 Quantity = quantity,
                 Category = (ProductCategory?)categoryIndex
             };
-            
-            var isAdded = ProductService.AddProduct(productDto);
+
+            try
+            {
+                ProductService.AddProduct(productDto);
+            }
+            catch
+            {
+                HandlerException.HandleException(new ProductInformationInvalidException(
+                    "Product information is invalid. Please check the details and try again."));
+            }
+
             Console.Clear();
             Background.MenuBorder(5, 50);
-            if (isAdded)
-            {
-                Console.SetCursorPosition(leftMargin, 2);
-                Console.WriteLine("Product added successfully!");
-                Console.SetCursorPosition(leftMargin, 3);
-                Console.WriteLine("Returning to menu....");
-                Thread.Sleep(2000);
-                MenuController.Menu();
-            }
+            Console.SetCursorPosition(leftMargin, 2);
+            Console.WriteLine("Product added successfully!"); 
+            Console.SetCursorPosition(leftMargin, 3);
+            Console.WriteLine("Returning to menu....");
+            Thread.Sleep(2000);
+            MenuController.Menu();
+            
         }
     }
 }
