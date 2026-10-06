@@ -4,7 +4,7 @@ using StockControl.Data;
 
 namespace StockControl.Services
 {
-    class ProductService
+    public static class ProductService
     {
         public static bool AddProduct(ProductDto productDto)
         {
@@ -35,7 +35,7 @@ namespace StockControl.Services
                 Quantity = productDto.Quantity.Value,
                 Category = productDto.Category.Value
             };
-            new Stock().AddProduct(product);
+            Stock.AddProduct(product);
             return true;
         }
     }

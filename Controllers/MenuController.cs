@@ -31,11 +31,11 @@ namespace StockControl.Controllers
             Console.SetCursorPosition(leftMargin, 9);
             Console.WriteLine("5. Register Sale (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 10);
-            Console.WriteLine("6. View Sales (Not Implemented)");
+            Console.WriteLine("6. View Inventory (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 11);
             Console.WriteLine("7. Inventory Report (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 12);
-            Console.WriteLine("8. View Inventory (Not Implemented)");
+            Console.WriteLine("8. View Sales (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 13);
             Console.WriteLine("9. Financial Report (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 15);

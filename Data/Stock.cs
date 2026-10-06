@@ -2,36 +2,36 @@ using StockControl.Models;
 
 namespace StockControl.Data
 {
-    public class Stock
+    public static class Stock
     {
-        private List<Product> Products { get; }
+        private static List<Product> Products { get; }
 
-        public Stock()
+        static Stock()
         {
             Products = new List<Product>();
         }
         
-        public void AddProduct(Product product)
+        public static void AddProduct(Product product)
         {
             Products.Add(product);
         }
         
-        public void RemoveProduct(Product product)
+        public static void RemoveProduct(Product product)
         {
             Products.Remove(product);
         }
         
-        public List<Product> GetProducts()
+        public static List<Product> GetProducts()
         {
             return Products;
         }
         
-        public Product? GetProductById(Guid id)
+        public static Product? GetProductById(Guid id)
         {
             return Products.FirstOrDefault(p => p.Id == id);
         }
 
-        public void UpdateProduct(Product updatedProduct)
+        public static void UpdateProduct(Product updatedProduct)
         {
             var existingProduct = GetProductById(updatedProduct.Id);
             if (existingProduct is null)
