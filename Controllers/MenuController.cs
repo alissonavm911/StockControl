@@ -21,7 +21,7 @@ namespace StockControl.Controllers
             Console.SetCursorPosition(leftMargin, 4);
             Console.WriteLine("------------------------");
             Console.SetCursorPosition(leftMargin, 5);
-            Console.WriteLine("1. Add Product (Not Implemented)");
+            Console.WriteLine("1. Add Product (Implementing)");
             Console.SetCursorPosition(leftMargin, 6);
             Console.WriteLine("2. Remove Product (Not Implemented)");
             Console.SetCursorPosition(leftMargin, 7);

@@ -1,4 +1,5 @@
 using StockControl.Utils;
+using StockControl.Controllers;
 
 namespace StockControl.Services
 {
@@ -17,7 +18,7 @@ namespace StockControl.Services
 
             switch (optionInt)
             {
-                case 1: break;
+                case 1: ProductController.AddProduct(); break;
                 case 2: break;
                 case 3: break;
                 case 4: break;
