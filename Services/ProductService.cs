@@ -4,9 +4,10 @@ namespace StockControl.Services
 {
     class ProductService
     {
-        public static void AddProduct(ProductDto product)
+        public static bool AddProduct(ProductDto product)
         {
-            Console.Clear();
+
+            return true;
         }
     }
 }

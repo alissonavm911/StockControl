@@ -50,7 +50,18 @@ namespace StockControl.Controllers
                 Category = (ProductCategory?)categoryIndex
             };
             
-            ProductService.AddProduct(productDto);
+            var isAdded = ProductService.AddProduct(productDto);
+            Console.Clear();
+            Background.MenuBorder(5, 50);
+            if (isAdded)
+            {
+                Console.SetCursorPosition(leftMargin, 2);
+                Console.WriteLine("Product added successfully!");
+                Console.SetCursorPosition(leftMargin, 3);
+                Console.WriteLine("Returning to menu....");
+                Thread.Sleep(2000);
+                MenuController.Menu();
+            }
         }
     }
 }
