@@ -50,7 +50,9 @@ namespace StockControl.Handlers
             Console.WriteLine($"{message}: {ex.Message}");
             Console.SetCursorPosition(4, 3);
             Console.WriteLine("Returning to the menu...");
-            Thread.Sleep(3000);
+            Console.SetCursorPosition(4, 4);
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
             MenuController.Menu();
         }
     }
