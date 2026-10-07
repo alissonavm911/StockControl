@@ -51,5 +51,10 @@ namespace StockControl.Services
                 HandlerException.HandleException(new Exceptions.ErrorOperationException(ex.Message));
             }
         }
+        public static Product[] GetProducts()
+        {
+            var products = Stock.GetProducts();
+            return products.ToArray();
+        }
     }
 }
