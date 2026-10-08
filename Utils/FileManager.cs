@@ -26,14 +26,15 @@ namespace StockControl.Utils
                 
                 var fullPath = Path.Combine(DefaultFolder, fileName);
                 PathValidator.ValidatePath(fullPath);
-                
+
                 var jsonString = JsonSerializer.Serialize(content, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(fullPath, jsonString);
+                var temporaryPath = $"{fullPath}.{Guid.NewGuid():N}.tmp";
+                File.WriteAllText(temporaryPath, jsonString);
+                File.Move(temporaryPath, fullPath, true);
             }
             catch (Exception ex)
             {
-                HandlerException.HandleException(
-                    new FileOperationException("Error occurred while saving to file: " + ex.Message));
+                throw new FileOperationException("Error occurred while saving to file: " + ex.Message);
             }
         }
 
@@ -58,11 +59,9 @@ namespace StockControl.Utils
 
                 return JsonSerializer.Deserialize<List<T>>(content) ?? new List<T>();
             }
-            catch (FileOperationException ex)
+            catch (Exception ex)
             {
-                HandlerException.HandleException(
-                    new FileOperationException("Error occurred while reading from file: " + ex.Message));
-                return new List<T>();
+                throw new FileOperationException("Error occurred while reading from file: " + ex.Message);
             }
         }
     }

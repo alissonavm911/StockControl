@@ -1,7 +1,6 @@
 using StockControl.Exceptions;
 using StockControl.Handlers;
 using StockControl.Data;
-using StockControl.Models;
 
 namespace StockControl.Utils
 {
@@ -14,6 +13,23 @@ namespace StockControl.Utils
             Console.SetCursorPosition(3, 2);
             Console.WriteLine("Exiting the program...");
             Thread.Sleep(2000);
+
+            if (!Stock.IsInitialized)
+            {
+                Console.Clear();
+                Background.MenuColor(ConsoleColor.DarkRed, ConsoleColor.White);
+                Background.MenuBorder(5, 80);
+                Console.SetCursorPosition(3, 2);
+                Console.WriteLine("Inventory could not be loaded.");
+                Console.SetCursorPosition(3, 3);
+                Console.WriteLine("Existing data was not overwritten.");
+                Console.SetCursorPosition(3, 4);
+                Console.WriteLine("Press any key to exit without saving...");
+                Console.ReadKey(true);
+                Environment.Exit(1);
+                return;
+            }
+
             try
             {
                 Console.Clear();
@@ -22,17 +38,24 @@ namespace StockControl.Utils
                 Console.SetCursorPosition(leftMargin, 2);
                 Console.WriteLine("Saving data in secure form.... Don't the Terminal!");
                 Thread.Sleep(3000);
-                FileManager.SaveToFile<Product>("inventory", Stock.GetProducts());
+                FileManager.SaveToFile("inventory", Stock.GetProducts());
                 Thread.Sleep(1000);
                 Console.SetCursorPosition(leftMargin, 3);
                 Console.WriteLine("Data saved successfully!");
                 Thread.Sleep(2000);
             }
+            catch (FileOperationException ex)
+            {
+                HandlerException.HandleException(ex);
+                return;
+            }
             catch (Exception ex)
             {
                 HandlerException.HandleException(
-                    new ErrorOperationException("Error in the data saved file" + ex.Message));
+                    new ErrorOperationException("Error in the data save operation: " + ex.Message));
+                return;
             }
+
             Console.Clear();
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;

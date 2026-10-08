@@ -9,6 +9,7 @@ namespace StockControl.Data
     {
         private static List<Product> Products { get; } = new();
         private const string DefaultFileName = "inventory";
+        public static bool IsInitialized { get; private set; }
 
         static Stock()
         {
@@ -21,6 +22,8 @@ namespace StockControl.Data
                 {
                     Products.AddRange(loadedProducts);
                 }
+
+                IsInitialized = true;
             }
             catch (Exception ex)
             {
