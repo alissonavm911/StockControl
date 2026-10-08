@@ -15,7 +15,7 @@ namespace StockControl.Utils
                 Console.Clear();
             } catch (Exception ex)
             {
-                HandlerException.HandleException(new Exceptions.ErrorOperationException("Error occurred while setting menu colors: " + ex.Message));
+                HandlerException.HandleException(new ErrorOperationException("Error occurred while setting menu colors: " + ex.Message));
             }
         }
         
@@ -54,7 +54,7 @@ namespace StockControl.Utils
             }
             catch (Exception ex)
             {
-                HandlerException.HandleException(new Exceptions.ErrorOperationException("Error occurred while drawing menu border: " + ex.Message));
+                HandlerException.HandleException(new ErrorOperationException("Error occurred while drawing menu border: " + ex.Message));
             }
         }
     }
