@@ -2,11 +2,11 @@ namespace StockControl.Exceptions
 {
     public class ProductInformationInvalidException : Exception
     {
-        public ProductInformationInvalidException(string message) : base("Product information is invalid: " + message) { }
+        public ProductInformationInvalidException(string message) : base(message) { }
     }
     public class OptionNotFoundException : Exception
     {
-        public OptionNotFoundException(string message) : base("Option not found: " + message) { }
+        public OptionNotFoundException(string message) : base(message) { }
     }
     public class ErrorOperationException : Exception
     {
@@ -18,15 +18,22 @@ namespace StockControl.Exceptions
     }
     public class InitializeStockException : Exception
     {
-        public InitializeStockException(string message) : base("Error occurred while initializing stock: " + message) { }
+        public InitializeStockException(string message) : base(message) { }
     }
     public class InitializeSystemException : Exception
     {
-        public InitializeSystemException(string message) : base("Error occurred while initializing system: " + message) { }
+        public InitializeSystemException(string message) : base(message) { }
     }
     public class ExitException : Exception
     {
-        public ExitException(string message) : base("Error occurred while exiting the program: " + message) { }
+        public ExitException(string message) : base(message) { }
     }
-    
+    public class FileOperationException : Exception
+    {
+        public FileOperationException(string message) : base(message) { }
+    }
+    public class InvalidPathException : Exception
+    {
+        public InvalidPathException(string message) : base(message) { }
+    }
 }

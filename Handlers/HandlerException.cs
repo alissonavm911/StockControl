@@ -10,33 +10,17 @@ namespace StockControl.Handlers
         {
             switch(ex)
             {
-                case ProductInformationInvalidException:
-                    ExceptionPrefixMessage("Invalid product information", ex);
-                    break;
-                case ArgumentNullException:
-                    ExceptionPrefixMessage("Product null", ex);
-                    break;
-                case ProductNotFoundException:
-                    ExceptionPrefixMessage("Product not found", ex);
-                    break;
-                case ErrorOperationException:
-                    ExceptionPrefixMessage("Error in operation", ex);
-                    break;
-                case ExitException:
-                    ExceptionPrefixMessage("Error while exiting the program", ex);
-                    break;
-                case InitializeStockException:
-                    ExceptionPrefixMessage("Error while initializing stock", ex);
-                    break;
-                case InitializeSystemException:
-                    ExceptionPrefixMessage("Error while initializing system", ex);
-                    break;
-                case OptionNotFoundException:
-                    ExceptionPrefixMessage("Option not found", ex);
-                    break;
-                default:
-                    ExceptionPrefixMessage("An error occurred", ex);
-                    break;
+                case ProductInformationInvalidException: ExceptionPrefixMessage("Invalid product information", ex); break;
+                case ArgumentNullException: ExceptionPrefixMessage("Product null", ex); break;
+                case ProductNotFoundException: ExceptionPrefixMessage("Product not found", ex); break;
+                case ErrorOperationException: ExceptionPrefixMessage("Error in operation", ex); break;
+                case ExitException: ExceptionPrefixMessage("Error while exiting the program", ex); break;
+                case InitializeStockException: ExceptionPrefixMessage("Error while initializing stock", ex); break;
+                case InitializeSystemException: ExceptionPrefixMessage("Error while initializing system", ex); break;
+                case OptionNotFoundException: ExceptionPrefixMessage("Option not found", ex); break;
+                case FileOperationException: ExceptionPrefixMessage("Error in file operation", ex); break;
+                case InvalidPathException: ExceptionPrefixMessage("Invalid path", ex); break;
+                default: ExceptionPrefixMessage("An error occurred", ex); break;
             }
         }
         

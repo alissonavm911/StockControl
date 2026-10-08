@@ -1,18 +1,26 @@
 using StockControl.Models;
 using StockControl.Exceptions;
 using StockControl.Handlers;
+using StockControl.Utils;
 
 namespace StockControl.Data
 {
     public static class Stock
     {
         private static List<Product> Products { get; }
+        private const string DefaultFileName = "Inventory";
 
         static Stock()
         {
             try
             {
                 Products = new List<Product>();
+                var loadedProducts = FileManager.ReadFromFile<Product>(DefaultFileName);
+
+                if (loadedProducts.Length > 0)
+                {
+                    Products.AddRange(loadedProducts);
+                }
             }
             catch (Exception ex)
             {
