@@ -1,7 +1,5 @@
-using StockControl.Handlers;
 using StockControl.Exceptions;
 using System.Text.Json;
-using StockControl.Models;
 
 namespace StockControl.Utils
 {
@@ -15,7 +13,7 @@ namespace StockControl.Utils
         // The extension in data saved file
         private static readonly string DefaultExtension = ".json";
         
-        public static void SaveToFile<T>(string fileName, List<Product>? content)
+        public static void SaveToFile<TProduct>(string fileName, List<TProduct>? content)
         {
             try
             {

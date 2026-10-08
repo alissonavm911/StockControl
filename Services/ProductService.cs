@@ -12,23 +12,23 @@ namespace StockControl.Services
         {
             if (string.IsNullOrEmpty(productDto.Name) )
             {
-                HandlerException.HandleException(new Exceptions.ProductInformationInvalidException("Product name must be provided."));
+                HandlerException.HandleException(new ProductInformationInvalidException("Product name must be provided."));
             }
             if (productDto.Price < 0)
             {
-                HandlerException.HandleException(new Exceptions.ProductInformationInvalidException("Product price and quantity must be non-negative."));
+                HandlerException.HandleException(new ProductInformationInvalidException("Product price and quantity must be non-negative."));
             }
             if (productDto.Price == null)
             {
-                HandlerException.HandleException(new Exceptions.ProductInformationInvalidException("Product price must be provided."));
+                HandlerException.HandleException(new ProductInformationInvalidException("Product price must be provided."));
             }
             if (productDto.Quantity == null)
             {
-                HandlerException.HandleException(new Exceptions.ProductInformationInvalidException("Product quantity must be provided."));
+                HandlerException.HandleException(new ProductInformationInvalidException("Product quantity must be provided."));
             }
             if(productDto.Category == null || !Enum.IsDefined(typeof(ProductCategory), productDto.Category))
             {
-                HandlerException.HandleException(new Exceptions.ProductInformationInvalidException("Product category is invalid."));
+                HandlerException.HandleException(new ProductInformationInvalidException("Product category is invalid."));
             }
 
             try
@@ -48,7 +48,7 @@ namespace StockControl.Services
                 Stock.AddProduct(product);
             } catch (Exception ex)
             {
-                HandlerException.HandleException(new Exceptions.ErrorOperationException(ex.Message));
+                HandlerException.HandleException(new ErrorOperationException(ex.Message));
             }
         }
         public static List<Product> GetProducts()
