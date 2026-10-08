@@ -32,7 +32,7 @@ namespace StockControl.Controllers
                 Console.SetCursorPosition(leftMargin, 4);
                 Console.WriteLine("2. Remove Product");
                 Console.SetCursorPosition(leftMargin, 5);
-                Console.WriteLine("3. Update Product (Not Implemented)");
+                Console.WriteLine("3. Update Product");
                 Console.SetCursorPosition(leftMargin, 6);
                 Console.WriteLine("4. View Products ");
                 Console.SetCursorPosition(leftMargin, 7);

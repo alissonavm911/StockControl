@@ -57,6 +57,11 @@ namespace StockControl.Services
             return products;
         }
 
+        public static Product GetProduct(Guid id)
+        {
+            return Stock.GetProductById(id);
+        }
+
         public static void RemoveProduct(Guid id)
         {
             var product = Stock.GetProducts().FirstOrDefault(p => p.Id == id);
@@ -66,6 +71,34 @@ namespace StockControl.Services
             }
 
             Stock.RemoveProduct(product);
+        }
+
+        public static void UpdateProduct(Guid id, ProductDto productDto)
+        {
+            if (productDto.Name != null && string.IsNullOrWhiteSpace(productDto.Name))
+            {
+                throw new ProductInformationInvalidException("Product name cannot be empty.");
+            }
+            if (productDto.Price < 0)
+            {
+                throw new ProductInformationInvalidException("Product price must be non-negative.");
+            }
+            if (productDto.Category != null &&
+                !Enum.IsDefined(typeof(ProductCategory), productDto.Category.Value))
+            {
+                throw new ProductInformationInvalidException("Product category is invalid.");
+            }
+
+            var currentProduct = Stock.GetProductById(id);
+            var updatedProduct = currentProduct with
+            {
+                Name = productDto.Name?.Trim() ?? currentProduct.Name,
+                Price = productDto.Price ?? currentProduct.Price,
+                Quantity = productDto.Quantity ?? currentProduct.Quantity,
+                Category = productDto.Category ?? currentProduct.Category
+            };
+
+            Stock.UpdateProduct(updatedProduct);
         }
     }
 }

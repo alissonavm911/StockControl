@@ -17,7 +17,7 @@ namespace StockControl.Services
                 {
                     case 1: Console.Clear(); ProductController.AddProduct(); break;
                     case 2: Console.Clear(); ProductController.RemoveProduct(); break;
-                    case 3: Console.Clear(); break;
+                    case 3: Console.Clear(); ProductController.UpdateProduct(); break;
                     case 4: Console.Clear(); ProductController.ViewProducts(); break;
                     case 5: Console.Clear(); break;
                     case 6: Console.Clear(); ProductController.ViewInventory(); break;

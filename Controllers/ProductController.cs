@@ -223,6 +223,171 @@ namespace StockControl.Controllers
             MenuController.Menu();
         }
 
+        public static void UpdateProduct()
+        {
+            if (!ConsoleSize.EnsureMinimumSize())
+            {
+                return;
+            }
+
+            const int leftMargin = 3;
+            Console.Clear();
+            Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+            Background.MenuBorder(8, 70);
+            Console.SetCursorPosition(leftMargin, 2);
+            Console.WriteLine("Update Product");
+            Console.SetCursorPosition(leftMargin, 3);
+            Console.WriteLine("--------------");
+            Console.SetCursorPosition(leftMargin, 4);
+            Console.Write("Enter product ID: ");
+
+            if (!Guid.TryParse(Console.ReadLine(), out var productId))
+            {
+                HandlerException.HandleException(
+                    new ProductInformationInvalidException("Product ID is invalid."));
+                return;
+            }
+
+            try
+            {
+                var product = ProductService.GetProduct(productId);
+                if (!ConsoleSize.EnsureMinimumSize())
+                {
+                    return;
+                }
+
+                Console.Clear();
+                Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+                Background.MenuBorder(19, 100);
+                Console.SetCursorPosition(leftMargin, 2);
+                Console.WriteLine("Update Product - leave a field blank to keep its current value");
+                Console.SetCursorPosition(leftMargin, 4);
+                Console.WriteLine($"ID: {product.Id}");
+                Console.SetCursorPosition(leftMargin, 5);
+                Console.WriteLine($"Current name: {product.Name}");
+                Console.SetCursorPosition(leftMargin, 6);
+                Console.WriteLine($"Current price: {product.Price}");
+                Console.SetCursorPosition(leftMargin, 7);
+                Console.WriteLine($"Current quantity: {product.Quantity}");
+                Console.SetCursorPosition(leftMargin, 8);
+                Console.WriteLine($"Current category: {product.Category}");
+                var categories = Enum.GetValues<ProductCategory>();
+                for (var i = 0; i < categories.Length; i += 4)
+                {
+                    Console.SetCursorPosition(leftMargin, 9 + i / 4);
+                    Console.WriteLine(string.Join(" | ", categories
+                        .Skip(i)
+                        .Take(4)
+                        .Select(category => $"{(int)category}: {category}")));
+                }
+
+                Console.SetCursorPosition(leftMargin, 13);
+                Console.Write("New name: ");
+                var nameInput = Console.ReadLine();
+                Console.SetCursorPosition(leftMargin, 14);
+                Console.Write("New price: ");
+                var priceInput = Console.ReadLine();
+                Console.SetCursorPosition(leftMargin, 15);
+                Console.Write("New quantity: ");
+                var quantityInput = Console.ReadLine();
+                Console.SetCursorPosition(leftMargin, 16);
+                Console.Write("New category (number, blank to keep): ");
+                var categoryInput = Console.ReadLine();
+
+                var productDto = new ProductDto
+                {
+                    Name = string.IsNullOrWhiteSpace(nameInput) ? null : nameInput.Trim(),
+                    Price = ParseOptionalDecimal(priceInput, "Product price"),
+                    Quantity = ParseOptionalQuantity(quantityInput),
+                    Category = ParseOptionalCategory(categoryInput)
+                };
+
+                if (productDto.Name == null && productDto.Price == null &&
+                    productDto.Quantity == null && productDto.Category == null)
+                {
+                    Console.Clear();
+                    Background.MenuBorder(5, 60);
+                    Console.SetCursorPosition(leftMargin, 2);
+                    Console.WriteLine("No changes were requested.");
+                    Console.SetCursorPosition(leftMargin, 3);
+                    Console.WriteLine("Press any key to return to the menu...");
+                    Console.ReadKey(true);
+                    MenuController.Menu();
+                    return;
+                }
+
+                ProductService.UpdateProduct(productId, productDto);
+
+                Console.Clear();
+                Background.MenuBorder(5, 60);
+                Console.SetCursorPosition(leftMargin, 2);
+                Console.WriteLine("Product updated successfully!");
+                Console.SetCursorPosition(leftMargin, 3);
+                Console.WriteLine("Press any key to return to the menu...");
+                Console.ReadKey(true);
+                MenuController.Menu();
+            }
+            catch (ProductNotFoundException ex)
+            {
+                HandlerException.HandleException(ex);
+            }
+            catch (ProductInformationInvalidException ex)
+            {
+                HandlerException.HandleException(ex);
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while updating the product: " + ex.Message));
+            }
+        }
+
+        private static decimal? ParseOptionalDecimal(string? input, string fieldName)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return null;
+            }
+
+            if (!decimal.TryParse(input, out var value))
+            {
+                throw new ProductInformationInvalidException($"{fieldName} is invalid.");
+            }
+
+            return value;
+        }
+
+        private static uint? ParseOptionalQuantity(string? input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return null;
+            }
+
+            if (!uint.TryParse(input, out var value))
+            {
+                throw new ProductInformationInvalidException("Product quantity is invalid.");
+            }
+
+            return value;
+        }
+
+        private static ProductCategory? ParseOptionalCategory(string? input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return null;
+            }
+
+            if (!int.TryParse(input, out var value) ||
+                !Enum.IsDefined(typeof(ProductCategory), value))
+            {
+                throw new ProductInformationInvalidException("Product category is invalid.");
+            }
+
+            return (ProductCategory)value;
+        }
+
         public static void ViewInventory()
         {
             try

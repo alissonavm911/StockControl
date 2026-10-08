@@ -58,45 +58,24 @@ namespace StockControl.Data
 
         public static Product GetProductById(Guid id)
         {
-            try
+            var product = Products.FirstOrDefault(p => p.Id == id);
+            if (product.Id == Guid.Empty)
             {
-                if (Products.Count > 0)
-                {
-                    return Products.FirstOrDefault(p => p.Id == id);
-                }
-                HandlerException.HandleException(new ProductNotFoundException("Product not found in the stock"));
+                throw new ProductNotFoundException("Product not found in the stock.");
             }
-            catch (Exception ex)
-            {
-                HandlerException.HandleException(
-                    new ErrorOperationException("Error occurred while getting the product: " + ex.Message));
-            }
-            return default;
+
+            return product;
         }
 
         public static void UpdateProduct(Product updatedProduct)
         {
-            try
+            var productIndex = Products.FindIndex(p => p.Id == updatedProduct.Id);
+            if (productIndex < 0)
             {
-                var updated = false;
-                for (int i = 0; i < Products.Count; i++)
-                {
-                    if (Products[i].Id == updatedProduct.Id)
-                    {
-                        Products[i] = updatedProduct;
-                        updated = true;
-                        break;
-                    }
-                }
-                if (!updated)
-                {
-                    HandlerException.HandleException(new ProductNotFoundException("Product not found in the stock"));
-                }
+                throw new ProductNotFoundException("Product not found in the stock.");
             }
-            catch (Exception ex)
-            {
-                HandlerException.HandleException(new ErrorOperationException("Error occurred while updating the product: " + ex.Message));
-            }
+
+            Products[productIndex] = updatedProduct;
         }
     }
 }
