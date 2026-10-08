@@ -6,25 +6,33 @@ namespace StockControl.Handlers
 {
     public static class HandlerException
     {
-        public static void HandleException(Exception ex)
+        public static void HandleException(Exception ex, bool returnToMenu = true)
         {
-            switch(ex)
+            var message = ex switch
             {
-                case ProductInformationInvalidException: ExceptionPrefixMessage("Invalid product information", ex); break;
-                case ArgumentNullException: ExceptionPrefixMessage("Product null", ex); break;
-                case ProductNotFoundException: ExceptionPrefixMessage("Product not found", ex); break;
-                case ErrorOperationException: ExceptionPrefixMessage("Error in operation", ex); break;
-                case ExitException: ExceptionPrefixMessage("Error while exiting the program", ex); break;
-                case InitializeStockException: ExceptionPrefixMessage("Error while initializing stock", ex); break;
-                case InitializeSystemException: ExceptionPrefixMessage("Error while initializing system", ex); break;
-                case OptionNotFoundException: ExceptionPrefixMessage("Option not found", ex); break;
-                case FileOperationException: ExceptionPrefixMessage("Error in file operation: ", ex); break;
-                case InvalidPathException: ExceptionPrefixMessage("Invalid path", ex); break;
-                default: ExceptionPrefixMessage("An error occurred", ex); break;
+                ProductInformationInvalidException => "Invalid product information",
+                ArgumentNullException => "Product null",
+                ProductNotFoundException => "Product not found",
+                ErrorOperationException => "Error in operation",
+                ExitException => "Error while exiting the program",
+                InitializeStockException => "Error while initializing stock",
+                InitializeSystemException => "Error while initializing system",
+                OptionNotFoundException => "Option not found",
+                FileOperationException => "Error in file operation",
+                InvalidPathException => "Invalid path",
+                _ => "An error occurred"
+            };
+
+            if (!returnToMenu)
+            {
+                Console.Error.WriteLine($"{message}: {ex.Message}");
+                return;
             }
+
+            ExceptionPrefixMessage(message, ex);
         }
-        
-        public static void ExceptionPrefixMessage(string message , Exception ex)
+
+        public static void ExceptionPrefixMessage(string message, Exception ex)
         {
             if (!ConsoleSize.EnsureMinimumSize())
             {

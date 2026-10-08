@@ -1,3 +1,6 @@
+using StockControl.Exceptions;
+using StockControl.Handlers;
+
 namespace StockControl.Utils
 {
     public static class ConsoleSize
@@ -36,18 +39,26 @@ namespace StockControl.Utils
                     catch (IOException ex)
                     {
                         resizeError = ex.Message;
+                        HandlerException.HandleException(
+                            new ErrorOperationException("Could not resize the console: " + ex.Message), false);
                     }
                     catch (PlatformNotSupportedException ex)
                     {
                         resizeError = ex.Message;
+                        HandlerException.HandleException(
+                            new ErrorOperationException("Could not resize the console: " + ex.Message), false);
                     }
                     catch (ArgumentOutOfRangeException ex)
                     {
                         resizeError = ex.Message;
+                        HandlerException.HandleException(
+                            new ErrorOperationException("Could not resize the console: " + ex.Message), false);
                     }
                     catch (InvalidOperationException ex)
                     {
                         resizeError = ex.Message;
+                        HandlerException.HandleException(
+                            new ErrorOperationException("Could not resize the console: " + ex.Message), false);
                     }
                 }
                 else

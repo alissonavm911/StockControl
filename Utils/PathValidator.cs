@@ -1,28 +1,41 @@
 using StockControl.Exceptions;
+using StockControl.Handlers;
 
 namespace StockControl.Utils
 {
     public class PathValidator
     {
-        public static bool ValidatePath(string filePath)
+        public static bool ValidatePath(string filePath, bool returnToMenu = true)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
+            try
             {
-                throw new InvalidPathException("File path cannot be empty.");
-            }
+                if (string.IsNullOrWhiteSpace(filePath))
+                {
+                    HandlerException.HandleException(
+                        new InvalidPathException("File path cannot be empty."), returnToMenu);
+                    return false;
+                }
 
-            if (filePath.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+                if (filePath.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+                {
+                    HandlerException.HandleException(
+                        new InvalidPathException("File path contains invalid characters."), returnToMenu);
+                    return false;
+                }
+
+                var pathDirectory = Path.GetDirectoryName(filePath);
+                if (!string.IsNullOrEmpty(pathDirectory) && !Directory.Exists(pathDirectory))
+                {
+                    Directory.CreateDirectory(pathDirectory);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
             {
-                throw new InvalidPathException("File path contains invalid characters.");
+                HandlerException.HandleException(new InvalidPathException(ex.Message), returnToMenu);
+                return false;
             }
-
-            var pathDirectory = Path.GetDirectoryName(filePath);
-            if (!string.IsNullOrEmpty(pathDirectory) && !Directory.Exists(pathDirectory))
-            {
-                Directory.CreateDirectory(pathDirectory);
-            }
-
-            return true;
         }
     }
 }
