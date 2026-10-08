@@ -40,7 +40,7 @@ namespace StockControl.Controllers
                 Console.SetCursorPosition(leftMargin, 8);
                 Console.WriteLine("6. View Inventory ");
                 Console.SetCursorPosition(leftMargin, 9);
-                Console.WriteLine("7. Inventory Report (Not Implemented)");
+                Console.WriteLine("7. Export Inventory Report");
                 Console.SetCursorPosition(leftMargin, 10);
                 Console.WriteLine("8. View Sales (Not Implemented)");
                 Console.SetCursorPosition(leftMargin, 11);
@@ -54,8 +54,9 @@ namespace StockControl.Controllers
                 MenuService.HandleMenu(Console.ReadLine());
             }
             catch (ArgumentOutOfRangeException ex)
-            { 
-                HandlerException.HandleException(new ErrorOperationException("Error occurred while displaying the menu: " + ex.Message));
+            {
+                HandlerException.HandleException(
+                    new ErrorOperationException("Error occurred while displaying the menu: " + ex.Message));
             }
         }
     }

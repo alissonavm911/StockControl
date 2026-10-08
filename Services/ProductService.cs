@@ -8,53 +8,101 @@ namespace StockControl.Services
 {
     public static class ProductService
     {
-        public static void AddProduct(ProductDto productDto)
+        public static bool AddProduct(ProductDto productDto)
         {
-            if (string.IsNullOrEmpty(productDto.Name) )
+            if (string.IsNullOrWhiteSpace(productDto.Name))
             {
-                HandlerException.HandleException(new ProductInformationInvalidException("Product name must be provided."));
+                HandlerException.HandleException(
+                    new ProductInformationInvalidException("Product name must be provided."));
+                return false;
             }
+
             if (productDto.Price < 0)
             {
-                HandlerException.HandleException(new ProductInformationInvalidException("Product price and quantity must be non-negative."));
+                HandlerException.HandleException(
+                    new ProductInformationInvalidException("Product price and quantity must be non-negative."));
+                return false;
             }
+
             if (productDto.Price == null)
             {
-                HandlerException.HandleException(new ProductInformationInvalidException("Product price must be provided."));
+                HandlerException.HandleException(
+                    new ProductInformationInvalidException("Product price must be provided."));
+                return false;
             }
+
             if (productDto.Quantity == null)
             {
-                HandlerException.HandleException(new ProductInformationInvalidException("Product quantity must be provided."));
+                HandlerException.HandleException(
+                    new ProductInformationInvalidException("Product quantity must be provided."));
+                return false;
             }
-            if(productDto.Category == null || !Enum.IsDefined(typeof(ProductCategory), productDto.Category))
+
+            if (productDto.Category == null || !Enum.IsDefined(typeof(ProductCategory), productDto.Category))
             {
-                HandlerException.HandleException(new ProductInformationInvalidException("Product category is invalid."));
+                HandlerException.HandleException(
+                    new ProductInformationInvalidException("Product category is invalid."));
+                return false;
             }
 
             try
             {
-                Product product = default;
-                if (productDto.Name != null && productDto.Price != null && productDto.Quantity != null &&
-                    productDto.Category != null)
+                var product = new Product()
                 {
-                    product = new Product()
-                    {
-                        Name = productDto.Name,
-                        Price = productDto.Price.Value,
-                        Quantity = productDto.Quantity.Value,
-                        Category = productDto.Category.Value
-                    };
-                }
-                Stock.AddProduct(product);
-            } catch (Exception ex)
+                    Name = productDto.Name.Trim(),
+                    Price = productDto.Price.Value,
+                    Quantity = productDto.Quantity.Value,
+                    Category = productDto.Category.Value
+                };
+
+                return Stock.AddProduct(product);
+            }
+            catch (Exception ex)
             {
                 HandlerException.HandleException(new ErrorOperationException(ex.Message));
+                return false;
             }
         }
-        public static List<Product> GetProducts()
+
+        public static IReadOnlyList<Product>? GetProducts()
         {
-            var products = Stock.GetProducts();
-            return products;
+            return Stock.GetProductsSnapshot();
+        }
+
+        public static InventoryReport? GetInventoryReport()
+        {
+            try
+            {
+                var products = Stock.GetProductsSnapshot();
+                if (products == null)
+                {
+                    return null;
+                }
+
+                var categories = Enum.GetValues<ProductCategory>()
+                    .Select(category =>
+                    {
+                        var categoryProducts = products.Where(product => product.Category == category).ToArray();
+                        return new CategoryInventorySummary(
+                            category,
+                            categoryProducts.Length,
+                            categoryProducts.Aggregate(0UL, (total, product) => total + product.Quantity),
+                            categoryProducts.Sum(product => product.Price * product.Quantity));
+                    })
+                    .ToArray();
+
+                return new InventoryReport(
+                    products,
+                    products.Aggregate(0UL, (total, product) => total + product.Quantity),
+                    products.Sum(product => product.Price * product.Quantity),
+                    categories);
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while preparing the inventory report: " + ex.Message));
+                return null;
+            }
         }
 
         public static Product GetProduct(Guid id)
@@ -62,43 +110,69 @@ namespace StockControl.Services
             return Stock.GetProductById(id);
         }
 
-        public static void RemoveProduct(Guid id)
+        public static bool RemoveProduct(Guid id)
         {
-            var product = Stock.GetProducts().FirstOrDefault(p => p.Id == id);
-            if (product.Id == Guid.Empty)
+            try
             {
-                throw new ProductNotFoundException("Product not found in the stock.");
+                var product = Stock.GetProductById(id);
+                return product.Id != Guid.Empty && Stock.RemoveProduct(product);
             }
-
-            Stock.RemoveProduct(product);
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while removing the product: " + ex.Message));
+                return false;
+            }
         }
 
-        public static void UpdateProduct(Guid id, ProductDto productDto)
+        public static bool UpdateProduct(Guid id, ProductDto productDto)
         {
             if (productDto.Name != null && string.IsNullOrWhiteSpace(productDto.Name))
             {
-                throw new ProductInformationInvalidException("Product name cannot be empty.");
+                HandlerException.HandleException(
+                    new ProductInformationInvalidException("Product name cannot be empty."));
+                return false;
             }
+
             if (productDto.Price < 0)
             {
-                throw new ProductInformationInvalidException("Product price must be non-negative.");
+                HandlerException.HandleException(
+                    new ProductInformationInvalidException("Product price must be non-negative."));
+                return false;
             }
+
             if (productDto.Category != null &&
                 !Enum.IsDefined(typeof(ProductCategory), productDto.Category.Value))
             {
-                throw new ProductInformationInvalidException("Product category is invalid.");
+                HandlerException.HandleException(
+                    new ProductInformationInvalidException("Product category is invalid."));
+                return false;
             }
 
-            var currentProduct = Stock.GetProductById(id);
-            var updatedProduct = currentProduct with
+            try
             {
-                Name = productDto.Name?.Trim() ?? currentProduct.Name,
-                Price = productDto.Price ?? currentProduct.Price,
-                Quantity = productDto.Quantity ?? currentProduct.Quantity,
-                Category = productDto.Category ?? currentProduct.Category
-            };
+                var currentProduct = Stock.GetProductById(id);
+                if (currentProduct.Id == Guid.Empty)
+                {
+                    return false;
+                }
 
-            Stock.UpdateProduct(updatedProduct);
+                var updatedProduct = currentProduct with
+                {
+                    Name = productDto.Name?.Trim() ?? currentProduct.Name,
+                    Price = productDto.Price ?? currentProduct.Price,
+                    Quantity = productDto.Quantity ?? currentProduct.Quantity,
+                    Category = productDto.Category ?? currentProduct.Category
+                };
+
+                return Stock.UpdateProduct(updatedProduct);
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while updating the product: " + ex.Message));
+                return false;
+            }
         }
     }
 }

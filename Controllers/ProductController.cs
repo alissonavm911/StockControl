@@ -69,12 +69,16 @@ namespace StockControl.Controllers
 
             try
             {
-                ProductService.AddProduct(productDto);
+                if (!ProductService.AddProduct(productDto))
+                {
+                    return;
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                HandlerException.HandleException(new ProductInformationInvalidException(
-                    "Product information is invalid. Please check the details and try again."));
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while adding the product: " + ex.Message));
+                return;
             }
 
             if (!ConsoleSize.EnsureMinimumSize())
@@ -103,6 +107,11 @@ namespace StockControl.Controllers
 
                 var leftMargin = 3;
                 var products = ProductService.GetProducts();
+                if (products == null)
+                {
+                    return;
+                }
+
                 if (products.Count == 0)
                 {
                     Console.Clear();
@@ -199,7 +208,10 @@ namespace StockControl.Controllers
 
             try
             {
-                ProductService.RemoveProduct(productId);
+                if (!ProductService.RemoveProduct(productId))
+                {
+                    return;
+                }
             }
             catch (ProductNotFoundException ex)
             {
@@ -251,6 +263,11 @@ namespace StockControl.Controllers
             try
             {
                 var product = ProductService.GetProduct(productId);
+                if (product.Id == Guid.Empty)
+                {
+                    return;
+                }
+
                 if (!ConsoleSize.EnsureMinimumSize())
                 {
                     return;
@@ -294,12 +311,20 @@ namespace StockControl.Controllers
                 Console.Write("New category (number, blank to keep): ");
                 var categoryInput = Console.ReadLine();
 
+                var price = ParseOptionalDecimal(priceInput, "Product price", out var priceIsValid);
+                var quantity = ParseOptionalQuantity(quantityInput, out var quantityIsValid);
+                var category = ParseOptionalCategory(categoryInput, out var categoryIsValid);
+                if (!priceIsValid || !quantityIsValid || !categoryIsValid)
+                {
+                    return;
+                }
+
                 var productDto = new ProductDto
                 {
                     Name = string.IsNullOrWhiteSpace(nameInput) ? null : nameInput.Trim(),
-                    Price = ParseOptionalDecimal(priceInput, "Product price"),
-                    Quantity = ParseOptionalQuantity(quantityInput),
-                    Category = ParseOptionalCategory(categoryInput)
+                    Price = price,
+                    Quantity = quantity,
+                    Category = category
                 };
 
                 if (productDto.Name == null && productDto.Price == null &&
@@ -316,7 +341,10 @@ namespace StockControl.Controllers
                     return;
                 }
 
-                ProductService.UpdateProduct(productId, productDto);
+                if (!ProductService.UpdateProduct(productId, productDto))
+                {
+                    return;
+                }
 
                 Console.Clear();
                 Background.MenuBorder(5, 60);
@@ -342,8 +370,97 @@ namespace StockControl.Controllers
             }
         }
 
-        private static decimal? ParseOptionalDecimal(string? input, string fieldName)
+        public static void ExportInventoryReport()
         {
+            if (!ConsoleSize.EnsureMinimumSize())
+            {
+                return;
+            }
+
+            try
+            {
+                var report = ProductService.GetInventoryReport();
+                if (report == null)
+                {
+                    return;
+                }
+
+                const int leftMargin = 3;
+                Console.Clear();
+                Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+                Background.MenuBorder(10, 90);
+                Console.SetCursorPosition(leftMargin, 2);
+                Console.WriteLine("Inventory Report");
+                Console.SetCursorPosition(leftMargin, 4);
+                Console.WriteLine($"Product types: {report.ProductCount}");
+                Console.SetCursorPosition(leftMargin, 5);
+                Console.WriteLine($"Units in stock: {report.TotalQuantity}");
+                Console.SetCursorPosition(leftMargin, 6);
+                Console.WriteLine($"Total inventory value: {report.TotalValue:C}");
+                Console.SetCursorPosition(leftMargin, 8);
+                Console.WriteLine("The export includes totals by category and full product details.");
+                Console.SetCursorPosition(leftMargin, 9);
+                Console.WriteLine("1. TXT");
+                Console.SetCursorPosition(leftMargin, 10);
+                Console.Write("2. PDF | Select format: ");
+
+                if (!int.TryParse(Console.ReadLine(), out var formatSelection) ||
+                    !Enum.IsDefined(typeof(InventoryReportFormat), formatSelection))
+                {
+                    HandlerException.HandleException(
+                        new OptionNotFoundException("Select 1 for TXT or 2 for PDF."));
+                    return;
+                }
+
+                Console.Clear();
+                Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+                Background.MenuBorder(7, 90);
+                Console.SetCursorPosition(leftMargin, 2);
+                Console.WriteLine("Export Inventory Report");
+                Console.SetCursorPosition(leftMargin, 4);
+                Console.WriteLine("Enter the destination file path (the extension is optional):");
+                Console.SetCursorPosition(leftMargin, 6);
+                Console.Write("Path: ");
+                var destinationPath = Console.ReadLine();
+
+                var format = (InventoryReportFormat)formatSelection;
+                var exportedPath = InventoryReportExporter.Export(report, destinationPath, format);
+                if (exportedPath == null)
+                {
+                    return;
+                }
+
+                Console.Clear();
+                Background.MenuBorder(6, 90);
+                Console.SetCursorPosition(leftMargin, 2);
+                Console.WriteLine("Inventory report exported successfully.");
+                Console.SetCursorPosition(leftMargin, 3);
+                Console.WriteLine($"Format: {format}");
+                Console.SetCursorPosition(leftMargin, 4);
+                Console.WriteLine($"File: {exportedPath}");
+                Console.SetCursorPosition(leftMargin, 5);
+                Console.WriteLine("Press any key to return to the menu...");
+                Console.ReadKey(true);
+                MenuController.Menu();
+            }
+            catch (InvalidPathException ex)
+            {
+                HandlerException.HandleException(ex);
+            }
+            catch (FileOperationException ex)
+            {
+                HandlerException.HandleException(ex);
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while generating the inventory report: " + ex.Message));
+            }
+        }
+
+        private static decimal? ParseOptionalDecimal(string? input, string fieldName, out bool isValid)
+        {
+            isValid = true;
             if (string.IsNullOrWhiteSpace(input))
             {
                 return null;
@@ -351,14 +468,17 @@ namespace StockControl.Controllers
 
             if (!decimal.TryParse(input, out var value))
             {
-                throw new ProductInformationInvalidException($"{fieldName} is invalid.");
+                HandlerException.HandleException(new ProductInformationInvalidException($"{fieldName} is invalid."));
+                isValid = false;
+                return null;
             }
 
             return value;
         }
 
-        private static uint? ParseOptionalQuantity(string? input)
+        private static uint? ParseOptionalQuantity(string? input, out bool isValid)
         {
+            isValid = true;
             if (string.IsNullOrWhiteSpace(input))
             {
                 return null;
@@ -366,14 +486,18 @@ namespace StockControl.Controllers
 
             if (!uint.TryParse(input, out var value))
             {
-                throw new ProductInformationInvalidException("Product quantity is invalid.");
+                HandlerException.HandleException(
+                    new ProductInformationInvalidException("Product quantity is invalid."));
+                isValid = false;
+                return null;
             }
 
             return value;
         }
 
-        private static ProductCategory? ParseOptionalCategory(string? input)
+        private static ProductCategory? ParseOptionalCategory(string? input, out bool isValid)
         {
+            isValid = true;
             if (string.IsNullOrWhiteSpace(input))
             {
                 return null;
@@ -382,7 +506,10 @@ namespace StockControl.Controllers
             if (!int.TryParse(input, out var value) ||
                 !Enum.IsDefined(typeof(ProductCategory), value))
             {
-                throw new ProductInformationInvalidException("Product category is invalid.");
+                HandlerException.HandleException(
+                    new ProductInformationInvalidException("Product category is invalid."));
+                isValid = false;
+                return null;
             }
 
             return (ProductCategory)value;
@@ -399,6 +526,11 @@ namespace StockControl.Controllers
 
                 var leftMargin = 3;
                 var products = ProductService.GetProducts();
+                if (products == null)
+                {
+                    return;
+                }
+
                 if (products.Count == 0)
                 {
                     Console.Clear();

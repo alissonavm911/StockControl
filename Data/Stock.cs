@@ -17,6 +17,10 @@ namespace StockControl.Data
             {
                 Products = new List<Product>();
                 var loadedProducts = FileManager.ReadFromFile<Product>(DefaultFileName);
+                if (loadedProducts == null)
+                {
+                    return;
+                }
 
                 if (loadedProducts.Count > 0)
                 {
@@ -27,31 +31,55 @@ namespace StockControl.Data
             }
             catch (Exception ex)
             {
-                HandlerException.HandleException(new InitializeStockException(ex.Message));
+                HandlerException.HandleException(new InitializeStockException(ex.Message), false);
             }
         }
 
-        public static void AddProduct(Product product)
+        public static bool AddProduct(Product product)
         {
+            if (!EnsureInitialized())
+            {
+                return false;
+            }
+
             try
             {
                 Products.Add(product);
+                return true;
             }
-            catch (ArgumentNullException ex)
+            catch (Exception ex)
             {
-                HandlerException.HandleException(new ProductInformationInvalidException(ex.Message));
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while adding the product: " + ex.Message));
+                return false;
             }
         }
 
-        public static void RemoveProduct(Product product)
+        public static bool RemoveProduct(Product product)
         {
-            var productIndex = Products.FindIndex(p => p.Id == product.Id);
-            if (productIndex < 0)
+            if (!EnsureInitialized())
             {
-                throw new ProductNotFoundException("Product not found in the stock.");
+                return false;
             }
 
-            Products.RemoveAt(productIndex);
+            try
+            {
+                var productIndex = Products.FindIndex(p => p.Id == product.Id);
+                if (productIndex < 0)
+                {
+                    HandlerException.HandleException(new ProductNotFoundException("Product not found in the stock."));
+                    return false;
+                }
+
+                Products.RemoveAt(productIndex);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while removing the product: " + ex.Message));
+                return false;
+            }
         }
 
         public static List<Product> GetProducts()
@@ -59,26 +87,88 @@ namespace StockControl.Data
             return Products;
         }
 
-        public static Product GetProductById(Guid id)
+        public static IReadOnlyList<Product>? GetProductsSnapshot()
         {
-            var product = Products.FirstOrDefault(p => p.Id == id);
-            if (product.Id == Guid.Empty)
+            if (!EnsureInitialized())
             {
-                throw new ProductNotFoundException("Product not found in the stock.");
+                return null;
             }
 
-            return product;
+            try
+            {
+                return Products.ToArray();
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while preparing a stock snapshot: " + ex.Message));
+                return null;
+            }
         }
 
-        public static void UpdateProduct(Product updatedProduct)
+        public static Product GetProductById(Guid id)
         {
-            var productIndex = Products.FindIndex(p => p.Id == updatedProduct.Id);
-            if (productIndex < 0)
+            if (!EnsureInitialized())
             {
-                throw new ProductNotFoundException("Product not found in the stock.");
+                return default;
             }
 
-            Products[productIndex] = updatedProduct;
+            try
+            {
+                var product = Products.FirstOrDefault(p => p.Id == id);
+                if (product.Id == Guid.Empty)
+                {
+                    HandlerException.HandleException(new ProductNotFoundException("Product not found in the stock."));
+                    return default;
+                }
+
+                return product;
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while getting the product: " + ex.Message));
+                return default;
+            }
+        }
+
+        public static bool UpdateProduct(Product updatedProduct)
+        {
+            if (!EnsureInitialized())
+            {
+                return false;
+            }
+
+            try
+            {
+                var productIndex = Products.FindIndex(p => p.Id == updatedProduct.Id);
+                if (productIndex < 0)
+                {
+                    HandlerException.HandleException(new ProductNotFoundException("Product not found in the stock."));
+                    return false;
+                }
+
+                Products[productIndex] = updatedProduct;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while updating the product: " + ex.Message));
+                return false;
+            }
+        }
+
+        private static bool EnsureInitialized()
+        {
+            if (IsInitialized)
+            {
+                return true;
+            }
+
+            HandlerException.HandleException(new InitializeStockException(
+                "Inventory is unavailable because it could not be loaded. Correct the data file and restart the application."));
+            return false;
         }
     }
 }
