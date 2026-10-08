@@ -56,5 +56,16 @@ namespace StockControl.Services
             var products = Stock.GetProducts();
             return products;
         }
+
+        public static void RemoveProduct(Guid id)
+        {
+            var product = Stock.GetProducts().FirstOrDefault(p => p.Id == id);
+            if (product.Id == Guid.Empty)
+            {
+                throw new ProductNotFoundException("Product not found in the stock.");
+            }
+
+            Stock.RemoveProduct(product);
+        }
     }
 }

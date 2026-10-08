@@ -172,6 +172,57 @@ namespace StockControl.Controllers
             }
         }
 
+        public static void RemoveProduct()
+        {
+            if (!ConsoleSize.EnsureMinimumSize())
+            {
+                return;
+            }
+
+            Console.Clear();
+            Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+            Background.MenuBorder(8, 70);
+            const int leftMargin = 3;
+            Console.SetCursorPosition(leftMargin, 2);
+            Console.WriteLine("Remove Product");
+            Console.SetCursorPosition(leftMargin, 3);
+            Console.WriteLine("--------------");
+            Console.SetCursorPosition(leftMargin, 4);
+            Console.Write("Enter product ID: ");
+
+            if (!Guid.TryParse(Console.ReadLine(), out var productId))
+            {
+                HandlerException.HandleException(
+                    new ProductInformationInvalidException("Product ID is invalid."));
+                return;
+            }
+
+            try
+            {
+                ProductService.RemoveProduct(productId);
+            }
+            catch (ProductNotFoundException ex)
+            {
+                HandlerException.HandleException(ex);
+                return;
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while removing the product: " + ex.Message));
+                return;
+            }
+
+            Console.Clear();
+            Background.MenuBorder(5, 50);
+            Console.SetCursorPosition(leftMargin, 2);
+            Console.WriteLine("Product removed successfully!");
+            Console.SetCursorPosition(leftMargin, 3);
+            Console.WriteLine("Press any key to return to the menu...");
+            Console.ReadKey(true);
+            MenuController.Menu();
+        }
+
         public static void ViewInventory()
         {
             try

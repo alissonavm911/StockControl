@@ -42,20 +42,13 @@ namespace StockControl.Data
 
         public static void RemoveProduct(Product product)
         {
-            try
+            var productIndex = Products.FindIndex(p => p.Id == product.Id);
+            if (productIndex < 0)
             {
-                var productRemoved = Products.Remove(Products.FirstOrDefault(p => p.Id == product.Id));
-                if (productRemoved)
-                {
-                    HandlerException.HandleException(
-                        new ProductNotFoundException("Product not found in the stock"));
-                }
+                throw new ProductNotFoundException("Product not found in the stock.");
             }
-            catch (Exception ex)
-            {
-                HandlerException.HandleException(
-                    new ErrorOperationException("Error occurred while removing the product: " + ex.Message));
-            }
+
+            Products.RemoveAt(productIndex);
         }
 
         public static List<Product> GetProducts()
