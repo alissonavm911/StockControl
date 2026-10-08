@@ -7,8 +7,8 @@ namespace StockControl.Data
 {
     public static class Stock
     {
-        private static List<Product> Products { get; }
-        private const string DefaultFileName = "Inventory";
+        private static List<Product> Products { get; } = new();
+        private const string DefaultFileName = "inventory";
 
         static Stock()
         {
@@ -17,14 +17,14 @@ namespace StockControl.Data
                 Products = new List<Product>();
                 var loadedProducts = FileManager.ReadFromFile<Product>(DefaultFileName);
 
-                if (loadedProducts.Length > 0)
+                if (loadedProducts.Count > 0)
                 {
                     Products.AddRange(loadedProducts);
                 }
             }
             catch (Exception ex)
             {
-                throw new InitializeStockException(ex.Message);
+                HandlerException.HandleException(new InitializeStockException(ex.Message));
             }
         }
 
@@ -45,10 +45,10 @@ namespace StockControl.Data
             try
             {
                 var productRemoved = Products.Remove(Products.FirstOrDefault(p => p.Id == product.Id));
-
-                if (!productRemoved)
+                if (productRemoved)
                 {
-                    HandlerException.HandleException(new ProductNotFoundException("Product not found in the stock"));
+                    HandlerException.HandleException(
+                        new ProductNotFoundException("Product not found in the stock"));
                 }
             }
             catch (Exception ex)
@@ -63,17 +63,22 @@ namespace StockControl.Data
             return Products;
         }
 
-        public static Product? GetProductById(Guid id)
+        public static Product GetProductById(Guid id)
         {
             try
             {
-                return Products.FirstOrDefault(p => p.Id == id);
+                if (Products.Count > 0)
+                {
+                    return Products.FirstOrDefault(p => p.Id == id);
+                }
+                HandlerException.HandleException(new ProductNotFoundException("Product not found in the stock"));
             }
-            catch
+            catch (Exception ex)
             {
-                HandlerException.HandleException(new ProductNotFoundException("Product not found"));
-                return null;
+                HandlerException.HandleException(
+                    new ErrorOperationException("Error occurred while getting the product: " + ex.Message));
             }
+            return default;
         }
 
         public static void UpdateProduct(Product updatedProduct)

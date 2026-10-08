@@ -10,6 +10,11 @@ namespace StockControl.Controllers
     {
         public static void AddProduct()
         {
+            if (!ConsoleSize.EnsureMinimumSize())
+            {
+                return;
+            }
+
             Console.Clear();
             Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
             Console.Clear();
@@ -29,6 +34,11 @@ namespace StockControl.Controllers
             Console.Write("Enter product quantity: ");
             uint? quantity = uint.TryParse(Console.ReadLine(), out uint parsedQuantity) ? parsedQuantity : null;
             Thread.Sleep(500);
+
+            if (!ConsoleSize.EnsureMinimumSize())
+            {
+                return;
+            }
 
             Console.Clear();
             Background.MenuBorder(16, 100);
@@ -67,6 +77,11 @@ namespace StockControl.Controllers
                     "Product information is invalid. Please check the details and try again."));
             }
 
+            if (!ConsoleSize.EnsureMinimumSize())
+            {
+                return;
+            }
+
             Console.Clear();
             Background.MenuBorder(5, 50);
             Console.SetCursorPosition(leftMargin, 2);
@@ -81,18 +96,18 @@ namespace StockControl.Controllers
         {
             try
             {
-                Console.Clear();
-                Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
-                Console.Clear();
+                if (!ConsoleSize.EnsureMinimumSize())
+                {
+                    return;
+                }
+
                 var leftMargin = 3;
                 var products = ProductService.GetProducts();
-                Background.MenuBorder(leftMargin + 2 + products.Length * 3, 100);
-                Console.SetCursorPosition(leftMargin, 2);
-                Console.WriteLine("View Products");
-                Console.SetCursorPosition(leftMargin, 3);
-                Console.WriteLine("-------------");
-                if (products.Length == 0)
+                if (products.Count == 0)
                 {
+                    Console.Clear();
+                    Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+                    Background.MenuBorder(8, GetBorderWidth());
                     Console.SetCursorPosition(leftMargin, 4);
                     Console.WriteLine("No products available.");
                     Console.SetCursorPosition(leftMargin, 6);
@@ -101,43 +116,78 @@ namespace StockControl.Controllers
                     MenuController.Menu();
                     return;
                 }
-                for (int i = 0; i < products.Length; i++)
+
+                var pageSize = GetPageSize(3);
+                var totalPages = (products.Count + pageSize - 1) / pageSize;
+                var page = 0;
+
+                while (true)
                 {
-                    var product = products[i];
-                    Console.SetCursorPosition(leftMargin, 4 + i * 3);
-                    Console.WriteLine($"Name: {product.Name}");
-                    Console.SetCursorPosition(leftMargin, 5 + i * 3);
-                    Console.WriteLine($"Price: {product.Price:C}");
-                    Console.SetCursorPosition(leftMargin, 6 + i * 3);
-                    Console.WriteLine("---------------------");
+                    if (!ConsoleSize.EnsureMinimumSize())
+                    {
+                        return;
+                    }
+
+                    var pageProducts = products.Skip(page * pageSize).Take(pageSize).ToList();
+                    Console.Clear();
+                    Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+                    Background.MenuBorder(8 + pageProducts.Count * 3, GetBorderWidth());
+                    Console.SetCursorPosition(leftMargin, 2);
+                    Console.WriteLine("View Products");
+                    Console.SetCursorPosition(leftMargin, 3);
+                    Console.WriteLine("-------------");
+
+                    for (int i = 0; i < pageProducts.Count; i++)
+                    {
+                        var product = pageProducts[i];
+                        Console.SetCursorPosition(leftMargin, 4 + i * 3);
+                        Console.WriteLine($"Name: {product.Name}");
+                        Console.SetCursorPosition(leftMargin, 5 + i * 3);
+                        Console.WriteLine($"Price: {product.Price:C}");
+                        Console.SetCursorPosition(leftMargin, 6 + i * 3);
+                        Console.WriteLine("---------------------");
+                    }
+
+                    Console.SetCursorPosition(leftMargin, 7 + pageProducts.Count * 3);
+                    Console.WriteLine($"Page {page + 1}/{totalPages} | N: next | P: previous | Q: return");
+                    var key = Console.ReadKey(true).Key;
+                    if (key == ConsoleKey.N && page < totalPages - 1)
+                    {
+                        page++;
+                    }
+                    else if (key == ConsoleKey.P && page > 0)
+                    {
+                        page--;
+                    }
+                    else if (key != ConsoleKey.N && key != ConsoleKey.P)
+                    {
+                        MenuController.Menu();
+                        return;
+                    }
                 }
-                Console.SetCursorPosition(leftMargin, 7 + products.Length * 3);
-                Console.WriteLine("Press any key to return to the menu...");
-                Console.ReadKey();
-                MenuController.Menu();
-            } 
+            }
             catch (Exception ex)
             {
                 HandlerException.HandleException(new ErrorOperationException(ex.Message));
             }
         }
+
         public static void ViewInventory()
         {
             try
             {
-                Console.Clear();
-                Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
-                Console.Clear();
+                if (!ConsoleSize.EnsureMinimumSize())
+                {
+                    return;
+                }
+
                 var leftMargin = 3;
                 var products = ProductService.GetProducts();
-                Background.MenuBorder(leftMargin + 2 + products.Length * 6, 100);
-
-                Console.SetCursorPosition(leftMargin, 2);
-                Console.WriteLine("View Inventory");
-                Console.SetCursorPosition(leftMargin, 3);
-                Console.WriteLine("------------------------------------------------------------------");
-                if (products.Length == 0)
+                if (products.Count == 0)
                 {
+                    Console.Clear();
+                    Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+                    Background.MenuBorder(8, GetBorderWidth());
                     Console.SetCursorPosition(leftMargin, 4);
                     Console.WriteLine("No products available.");
                     Console.SetCursorPosition(leftMargin, 6);
@@ -147,32 +197,76 @@ namespace StockControl.Controllers
                     return;
                 }
 
-                for (int i = 0; i < products.Length; i++)
-                {
-                    var product = products[i];
-                    Console.SetCursorPosition(leftMargin, 4 + i * 6);
-                    Console.WriteLine($"Product Id: {product.Id}");
-                    Console.SetCursorPosition(leftMargin, 5 + i * 6);
-                    Console.WriteLine($"Name: {product.Name}");
-                    Console.SetCursorPosition(leftMargin, 6 + i * 6);
-                    Console.WriteLine($"Quantity: {product.Quantity}");
-                    Console.SetCursorPosition(leftMargin, 7 + i * 6);
-                    Console.WriteLine($"Price: {product.Price:C}");
-                    Console.SetCursorPosition(leftMargin, 8 + i * 6);
-                    Console.WriteLine($"Category: {product.Category}");
-                    Console.SetCursorPosition(leftMargin, 9 + i * 6);
-                    Console.WriteLine("---------------------");
-                }
+                var pageSize = GetPageSize(6);
+                var totalPages = (products.Count + pageSize - 1) / pageSize;
+                var page = 0;
 
-                Console.SetCursorPosition(leftMargin, 9 + products.Length * 6);
-                Console.WriteLine("Press any key to return to the menu...");
-                Console.ReadKey();
-                MenuController.Menu();
+                while (true)
+                {
+                    if (!ConsoleSize.EnsureMinimumSize())
+                    {
+                        return;
+                    }
+
+                    var pageProducts = products.Skip(page * pageSize).Take(pageSize).ToList();
+                    Console.Clear();
+                    Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+                    Background.MenuBorder(8 + pageProducts.Count * 6, GetBorderWidth());
+                    Console.SetCursorPosition(leftMargin, 2);
+                    Console.WriteLine("View Inventory");
+                    Console.SetCursorPosition(leftMargin, 3);
+                    Console.WriteLine("------------------------------------------------------------------");
+
+                    for (int i = 0; i < pageProducts.Count; i++)
+                    {
+                        var product = pageProducts[i];
+                        Console.SetCursorPosition(leftMargin, 4 + i * 6);
+                        Console.WriteLine($"Product Id: {product.Id}");
+                        Console.SetCursorPosition(leftMargin, 5 + i * 6);
+                        Console.WriteLine($"Name: {product.Name}");
+                        Console.SetCursorPosition(leftMargin, 6 + i * 6);
+                        Console.WriteLine($"Quantity: {product.Quantity}");
+                        Console.SetCursorPosition(leftMargin, 7 + i * 6);
+                        Console.WriteLine($"Price: {product.Price:C}");
+                        Console.SetCursorPosition(leftMargin, 8 + i * 6);
+                        Console.WriteLine($"Category: {product.Category}");
+                        Console.SetCursorPosition(leftMargin, 9 + i * 6);
+                        Console.WriteLine("---------------------");
+                    }
+
+                    Console.SetCursorPosition(leftMargin, 9 + pageProducts.Count * 6);
+                    Console.WriteLine($"Page {page + 1}/{totalPages} | N: next | P: previous | Q: return");
+                    var key = Console.ReadKey(true).Key;
+                    if (key == ConsoleKey.N && page < totalPages - 1)
+                    {
+                        page++;
+                    }
+                    else if (key == ConsoleKey.P && page > 0)
+                    {
+                        page--;
+                    }
+                    else if (key != ConsoleKey.N && key != ConsoleKey.P)
+                    {
+                        MenuController.Menu();
+                        return;
+                    }
+                }
             }
             catch (Exception ex)
             {
                 HandlerException.HandleException(new ErrorOperationException(ex.Message));
             }
+        }
+
+        private static int GetPageSize(int linesPerProduct)
+        {
+            var availableLines = Math.Max(1, Console.WindowHeight - 11);
+            return Math.Max(1, Math.Min(10, availableLines / linesPerProduct));
+        }
+
+        private static int GetBorderWidth()
+        {
+            return Math.Max(1, Math.Min(100, Console.WindowWidth - 2));
         }
     }
 }

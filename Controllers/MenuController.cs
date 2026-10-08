@@ -11,6 +11,11 @@ namespace StockControl.Controllers
         {
             try
             {
+                if (!ConsoleSize.EnsureMinimumSize())
+                {
+                    return;
+                }
+
                 var backgroundColor = ConsoleColor.DarkCyan;
                 var foregroundColor = ConsoleColor.White;
                 Background.MenuColor(backgroundColor, foregroundColor);

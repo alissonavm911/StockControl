@@ -6,3 +6,4 @@ riderModule.iml
 StockControl.sln
 .idea
 *.DotSettings.user
+*.DotSettings

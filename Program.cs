@@ -18,20 +18,6 @@ namespace StockControl
             {
                 HandlerException.HandleException(new InitializeSystemException(ex.Message));
             }
-            finally
-            {
-                Console.Clear();
-                Background.MenuBorder(18,50);
-                var leftMargin = 3;
-                Console.SetCursorPosition(leftMargin,2);
-                Console.WriteLine("Saving data in secure form.... Don't the Terminal!");
-                Thread.Sleep(500);
-                FileManager.SaveToFile("Inventory", Stock.GetProducts().ToArray());
-                Thread.Sleep(1000);
-                Console.SetCursorPosition(leftMargin,3);
-                Console.WriteLine("Data saved successfully!");
-                Thread.Sleep(2000);
-            }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace StockControl.Utils
                 }
 
                 // if the path isn't formated
-                if (filePath.IndexOfAny(Path.GetInvalidPathChars()) != 0)
+                if (filePath.IndexOfAny(Path.GetInvalidPathChars()) != -1)
                 {
                     HandlerException.HandleException(
                         new FormatException("Error occurred while reading file: " + filePath));

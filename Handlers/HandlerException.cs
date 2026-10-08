@@ -18,7 +18,7 @@ namespace StockControl.Handlers
                 case InitializeStockException: ExceptionPrefixMessage("Error while initializing stock", ex); break;
                 case InitializeSystemException: ExceptionPrefixMessage("Error while initializing system", ex); break;
                 case OptionNotFoundException: ExceptionPrefixMessage("Option not found", ex); break;
-                case FileOperationException: ExceptionPrefixMessage("Error in file operation", ex); break;
+                case FileOperationException: ExceptionPrefixMessage("Error in file operation: ", ex); break;
                 case InvalidPathException: ExceptionPrefixMessage("Invalid path", ex); break;
                 default: ExceptionPrefixMessage("An error occurred", ex); break;
             }
@@ -26,15 +26,20 @@ namespace StockControl.Handlers
         
         public static void ExceptionPrefixMessage(string message , Exception ex)
         {
+            if (!ConsoleSize.EnsureMinimumSize())
+            {
+                return;
+            }
+
             Console.Clear();
             Background.MenuColor(ConsoleColor.DarkRed, ConsoleColor.White);
             Console.Clear();
-            Background.MenuBorder(5, 100);
-            Console.SetCursorPosition(4, 2);
+            Background.MenuBorder(5, Math.Min(120, Console.WindowWidth - 3));
+            Console.SetCursorPosition(3, 2);
             Console.WriteLine($"{message}: {ex.Message}");
-            Console.SetCursorPosition(4, 3);
+            Console.SetCursorPosition(3, 3);
             Console.WriteLine("Returning to the menu...");
-            Console.SetCursorPosition(4, 4);
+            Console.SetCursorPosition(3, 4);
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
             MenuController.Menu();

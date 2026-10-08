@@ -1,6 +1,7 @@
 using StockControl.Handlers;
 using StockControl.Exceptions;
 using System.Text.Json;
+using StockControl.Models;
 
 namespace StockControl.Utils
 {
@@ -14,7 +15,7 @@ namespace StockControl.Utils
         // The extension in data saved file
         private static readonly string DefaultExtension = ".json";
         
-        public static void SaveToFile<T>(string fileName, T[] content)
+        public static void SaveToFile<T>(string fileName, List<Product>? content)
         {
             try
             {
@@ -36,7 +37,7 @@ namespace StockControl.Utils
             }
         }
 
-        public static T[] ReadFromFile<T>(string fileName)
+        public static List<T> ReadFromFile<T>(string fileName)
         {
             try
             {
@@ -50,18 +51,18 @@ namespace StockControl.Utils
                 // Se o arquivo padrão ainda não existir (primeira execução, por exemplo), retorna um array vazio com segurança
                 if (!File.Exists(fullPath))
                 {
-                    return Array.Empty<T>();
+                    return new List<T>();
                 }
 
                 var content = File.ReadAllText(fullPath);
 
-                return JsonSerializer.Deserialize<T[]>(content) ?? Array.Empty<T>();
+                return JsonSerializer.Deserialize<List<T>>(content) ?? new List<T>();
             }
-            catch (Exception ex)
+            catch (FileOperationException ex)
             {
                 HandlerException.HandleException(
                     new FileOperationException("Error occurred while reading from file: " + ex.Message));
-                return new T[0];
+                return new List<T>();
             }
         }
     }
