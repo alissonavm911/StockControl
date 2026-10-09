@@ -40,4 +40,8 @@ namespace StockControl.Exceptions
     {
         public InitializeSalesException(string message) : base(message) { }
     }
+    public class SaleNotFoundException : Exception
+    {
+        public SaleNotFoundException(string message) : base(message) { }
+    }
 }

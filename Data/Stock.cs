@@ -67,7 +67,8 @@ namespace StockControl.Data
                 var productIndex = Products.FindIndex(p => p.Id == product.Id);
                 if (productIndex < 0)
                 {
-                    HandlerException.HandleException(new ProductNotFoundException("Product not found in the stock."));
+                    HandlerException.HandleException(
+                        new ProductNotFoundException("Product not found in the stock."));
                     return false;
                 }
 

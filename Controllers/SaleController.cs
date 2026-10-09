@@ -1,0 +1,4 @@
+namespace StockControl.Controllers
+{
+    
+}
