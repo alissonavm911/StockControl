@@ -19,7 +19,7 @@ namespace StockControl.Services
                     case 2: ProductController.RemoveProduct(); break;
                     case 3: ProductController.UpdateProduct(); break;
                     case 4: ProductController.ViewProducts(); break;
-                    case 5: break;
+                    case 5: SaleController.AddSale(); break;
                     case 6: ProductController.ViewInventory(); break;
                     case 7: ProductController.ExportInventoryReport(); break;
                     case 8: break;
