@@ -14,11 +14,25 @@ namespace StockControl.Utils
                 
                     foreach (var item in dto.Products)
                     {
-                        var itemIndex = stock.FindIndex(p => p.Name == item.Key);
-                        if (itemIndex == -1)
+                        var matchingProducts = stock
+                            .Where(product => string.Equals(
+                                product.Name,
+                                item.Key,
+                                StringComparison.OrdinalIgnoreCase))
+                            .Take(2)
+                            .ToArray();
+                        if (matchingProducts.Length == 0)
                         {
                             HandlerException.HandleException(
-                                new ProductNotFoundException(item.Key + "Don't exist in stock"));
+                                new ProductNotFoundException($"Product '{item.Key}' does not exist in stock."));
+                            return false;
+                        }
+
+                        if (matchingProducts.Length > 1)
+                        {
+                            HandlerException.HandleException(
+                                new ProductInformationInvalidException(
+                                    $"More than one product named '{item.Key}' exists in stock. Rename duplicates before selling."));
                             return false;
                         }
                     }

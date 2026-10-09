@@ -1,4 +1,3 @@
-using StockControl.Controllers;
 using StockControl.Utils;
 using StockControl.Exceptions;
 
@@ -52,7 +51,6 @@ namespace StockControl.Handlers
             Console.SetCursorPosition(3, 4);
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
-            MenuController.Menu();
         }
     }
 }

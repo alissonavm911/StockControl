@@ -93,7 +93,6 @@ namespace StockControl.Controllers
             Console.SetCursorPosition(leftMargin, 3);
             Console.WriteLine("Returning to menu....");
             Thread.Sleep(2000);
-            MenuController.Menu();
         }
 
         public static void ViewProducts()
@@ -122,7 +121,6 @@ namespace StockControl.Controllers
                     Console.SetCursorPosition(leftMargin, 6);
                     Console.WriteLine("Press any key to return to the menu...");
                     Console.ReadKey();
-                    MenuController.Menu();
                     return;
                 }
 
@@ -170,7 +168,6 @@ namespace StockControl.Controllers
                     }
                     else if (key != ConsoleKey.N && key != ConsoleKey.P)
                     {
-                        MenuController.Menu();
                         return;
                     }
                 }
@@ -232,7 +229,6 @@ namespace StockControl.Controllers
             Console.SetCursorPosition(leftMargin, 3);
             Console.WriteLine("Press any key to return to the menu...");
             Console.ReadKey(true);
-            MenuController.Menu();
         }
 
         public static void UpdateProduct()
@@ -337,7 +333,6 @@ namespace StockControl.Controllers
                     Console.SetCursorPosition(leftMargin, 3);
                     Console.WriteLine("Press any key to return to the menu...");
                     Console.ReadKey(true);
-                    MenuController.Menu();
                     return;
                 }
 
@@ -353,7 +348,6 @@ namespace StockControl.Controllers
                 Console.SetCursorPosition(leftMargin, 3);
                 Console.WriteLine("Press any key to return to the menu...");
                 Console.ReadKey(true);
-                MenuController.Menu();
             }
             catch (ProductNotFoundException ex)
             {
@@ -441,7 +435,6 @@ namespace StockControl.Controllers
                 Console.SetCursorPosition(leftMargin, 5);
                 Console.WriteLine("Press any key to return to the menu...");
                 Console.ReadKey(true);
-                MenuController.Menu();
             }
             catch (InvalidPathException ex)
             {
@@ -541,7 +534,6 @@ namespace StockControl.Controllers
                     Console.SetCursorPosition(leftMargin, 6);
                     Console.WriteLine("Press any key to return to the menu...");
                     Console.ReadKey();
-                    MenuController.Menu();
                     return;
                 }
 
@@ -595,7 +587,6 @@ namespace StockControl.Controllers
                     }
                     else if (key != ConsoleKey.N && key != ConsoleKey.P)
                     {
-                        MenuController.Menu();
                         return;
                     }
                 }

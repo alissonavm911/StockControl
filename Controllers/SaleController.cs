@@ -1,4 +1,3 @@
-using StockControl.Controllers;
 using StockControl.Models;
 using StockControl.Services;
 using StockControl.Utils;
@@ -10,7 +9,7 @@ namespace StockControl.Controllers
         public static void AddSale()
         {
             var (year, month, day) = AddSaleDate();
-            var products = new Dictionary<string, uint>();
+            var products = new Dictionary<string, uint>(StringComparer.OrdinalIgnoreCase);
             var saleDate = new DateOnly(year, month, day);
 
             while (true)
@@ -55,7 +54,6 @@ namespace StockControl.Controllers
                             Date = saleDate,
                             Products = products
                         });
-                        MenuController.Menu();
                         return;
                     default:
                         Console.SetCursorPosition(leftMargin, 9);
