@@ -12,7 +12,7 @@ namespace StockControl.Models
     public record struct Sale
     {
         [JsonInclude] public Guid Id { get; private set; } = Guid.NewGuid();
-        public required DateTime Date { get; set; }
+        public required DateOnly Date { get; set; }
         public required List<SaleItem> Items { get; set; }
         public required decimal TotalValue { get; set; }
 

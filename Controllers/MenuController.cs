@@ -36,7 +36,7 @@ namespace StockControl.Controllers
                 Console.SetCursorPosition(leftMargin, 6);
                 Console.WriteLine("4. View Products ");
                 Console.SetCursorPosition(leftMargin, 7);
-                Console.WriteLine("5. Register Sale (Not Implemented)");
+                Console.WriteLine("5. Register Sale ");
                 Console.SetCursorPosition(leftMargin, 8);
                 Console.WriteLine("6. View Inventory ");
                 Console.SetCursorPosition(leftMargin, 9);
