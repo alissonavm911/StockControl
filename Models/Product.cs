@@ -9,7 +9,7 @@ namespace StockControl.Models
         public required string? Name { get; set; }
         public required decimal Price { get; set; }
         public required uint Quantity { get; set; }
-        public required ProductCategory Category { get; set; }
+        public required EProductCategory Category { get; set; }
 
         public Product()
         {

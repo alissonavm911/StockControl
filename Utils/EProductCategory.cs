@@ -1,6 +1,6 @@
 namespace StockControl.Utils
 {
-    public enum ProductCategory
+    public enum EProductCategory
     {
         Electronics = 1,
         Clothing = 2,

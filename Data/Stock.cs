@@ -9,7 +9,7 @@ namespace StockControl.Data
     {
         private static List<Product> Products { get; } = new();
         private const string DefaultFileName = "inventory";
-        public static bool IsInitialized { get; private set; }
+        public static bool IsInitialized { get; }
 
         static Stock()
         {

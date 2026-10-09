@@ -47,13 +47,13 @@ namespace StockControl.Controllers
             Console.SetCursorPosition(leftMargin, 3);
             Console.WriteLine("------------------------");
 
-            for (int i = 0; i < Enum.GetValues(typeof(ProductCategory)).Length; i++)
+            for (int i = 0; i < Enum.GetValues(typeof(EProductCategory)).Length; i++)
             {
                 Console.SetCursorPosition(leftMargin, 4 + i);
-                Console.WriteLine($"{i + 1}. {Enum.GetName(typeof(ProductCategory), i + 1)}");
+                Console.WriteLine($"{i + 1}. {Enum.GetName(typeof(EProductCategory), i + 1)}");
             }
 
-            Console.SetCursorPosition(leftMargin, 5 + Enum.GetValues(typeof(ProductCategory)).Length);
+            Console.SetCursorPosition(leftMargin, 5 + Enum.GetValues(typeof(EProductCategory)).Length);
             Console.Write("Enter category number: ");
             int? categoryIndex = int.TryParse(Console.ReadLine(), out int parsedCategoryIndex)
                 ? parsedCategoryIndex
@@ -64,7 +64,7 @@ namespace StockControl.Controllers
                 Name = name?.Trim(),
                 Price = price,
                 Quantity = quantity,
-                Category = (ProductCategory?)categoryIndex
+                Category = (EProductCategory?)categoryIndex
             };
 
             try
@@ -288,7 +288,7 @@ namespace StockControl.Controllers
                 Console.WriteLine($"Current quantity: {product.Quantity}");
                 Console.SetCursorPosition(leftMargin, 8);
                 Console.WriteLine($"Current category: {product.Category}");
-                var categories = Enum.GetValues<ProductCategory>();
+                var categories = Enum.GetValues<EProductCategory>();
                 for (var i = 0; i < categories.Length; i += 4)
                 {
                     Console.SetCursorPosition(leftMargin, 9 + i / 4);
@@ -495,7 +495,7 @@ namespace StockControl.Controllers
             return value;
         }
 
-        private static ProductCategory? ParseOptionalCategory(string? input, out bool isValid)
+        private static EProductCategory? ParseOptionalCategory(string? input, out bool isValid)
         {
             isValid = true;
             if (string.IsNullOrWhiteSpace(input))
@@ -504,7 +504,7 @@ namespace StockControl.Controllers
             }
 
             if (!int.TryParse(input, out var value) ||
-                !Enum.IsDefined(typeof(ProductCategory), value))
+                !Enum.IsDefined(typeof(EProductCategory), value))
             {
                 HandlerException.HandleException(
                     new ProductInformationInvalidException("Product category is invalid."));
@@ -512,7 +512,7 @@ namespace StockControl.Controllers
                 return null;
             }
 
-            return (ProductCategory)value;
+            return (EProductCategory)value;
         }
 
         public static void ViewInventory()

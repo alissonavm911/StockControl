@@ -38,7 +38,7 @@ namespace StockControl.Services
                 return false;
             }
 
-            if (productDto.Category == null || !Enum.IsDefined(typeof(ProductCategory), productDto.Category))
+            if (productDto.Category == null || !Enum.IsDefined(typeof(EProductCategory), productDto.Category))
             {
                 HandlerException.HandleException(
                     new ProductInformationInvalidException("Product category is invalid."));
@@ -79,7 +79,7 @@ namespace StockControl.Services
                     return null;
                 }
 
-                var categories = Enum.GetValues<ProductCategory>()
+                var categories = Enum.GetValues<EProductCategory>()
                     .Select(category =>
                     {
                         var categoryProducts = products.Where(product => product.Category == category).ToArray();
@@ -142,7 +142,7 @@ namespace StockControl.Services
             }
 
             if (productDto.Category != null &&
-                !Enum.IsDefined(typeof(ProductCategory), productDto.Category.Value))
+                !Enum.IsDefined(typeof(EProductCategory), productDto.Category.Value))
             {
                 HandlerException.HandleException(
                     new ProductInformationInvalidException("Product category is invalid."));
