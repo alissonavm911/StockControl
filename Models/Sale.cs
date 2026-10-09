@@ -6,9 +6,9 @@ namespace StockControl.Models
     {
         [JsonInclude] public Guid Id { get; private set; } = Guid.NewGuid();
         public required DateTime Date { get; set; }
-        public required Product[] Products { get; set; }
-        public required uint[] Quantities { get; set; }
-        public required decimal Values { get; set; }
+        public required HashSet<Product> Products { get; set; }
+        public required List<uint> Quantities { get; set; }
+        public required List<decimal> Values { get; set; }
 
         public Sale()
         {

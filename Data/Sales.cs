@@ -39,18 +39,6 @@ namespace StockControl.Data
         {
             return Sales;
         }
-        public static bool EnsureInitialized()
-        {
-            if (IsInitialized)
-            {
-                return true;
-            }
-
-            HandlerException.HandleException(
-                new InitializeSalesException(
-                    "Sales Repository is unavailable because it could not be loaded. Correct the data file and restart the application."));
-            return false;
-        }
         public static bool AddSale(Sale sale)
         {
             if (!EnsureInitialized())
@@ -122,6 +110,18 @@ namespace StockControl.Data
                     "Error occurred while updating the sale: " + ex.Message));
                 return false;
             }
+        }
+        private static bool EnsureInitialized()
+        {
+            if (IsInitialized)
+            {
+                return true;
+            }
+
+            HandlerException.HandleException(
+                new InitializeSalesException(
+                    "Sales Repository is unavailable because it could not be loaded. Correct the data file and restart the application."));
+            return false;
         }
     }
 }
