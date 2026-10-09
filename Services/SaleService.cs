@@ -14,7 +14,6 @@ namespace StockControl.Services
             {
                 var stock = Stock.GetProducts();
                 var verified = VerifyProductsSale.VerifyProducts(stock, dto);
-                Dictionary<string, uint> products = new();
                 if (!verified)
                 {
                     return;
