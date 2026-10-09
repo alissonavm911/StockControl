@@ -20,6 +20,7 @@ namespace StockControl.Handlers
                 OptionNotFoundException => "Option not found",
                 FileOperationException => "Error in file operation",
                 InvalidPathException => "Invalid path",
+                InitializeSalesException => "Error while initializing sales",
                 _ => "An error occurred"
             };
 

@@ -36,4 +36,8 @@ namespace StockControl.Exceptions
     {
         public InvalidPathException(string message) : base(message) { }
     }
+    public class InitializeSalesException : Exception
+    {
+        public InitializeSalesException(string message) : base(message) { }
+    }
 }
