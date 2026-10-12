@@ -177,8 +177,6 @@ Valor em estoque: R$ 1.000,00
 - [ ] Registro de vendas
 - [ ] Histórico de vendas
 - [ ] Relatório financeiro
-- [ ] Testes automatizados
-- [ ] Salvamento automático a cada alteração
 
 ## 🤝 Contribuindo
 
