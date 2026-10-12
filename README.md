@@ -12,8 +12,6 @@
 [![Curso](https://img.shields.io/badge/Curso-Fundamentos%20de%20C%23-7B2CBF?style=for-the-badge)](https://balta.io)
 [![balta.io](https://img.shields.io/badge/Feito%20com%20base%20no%20curso-balta.io-7B2CBF?style=for-the-badge)](https://balta.io)
 [![Status](https://img.shields.io/badge/Status-Em%20desenvolvimento-F4B400?style=for-the-badge)](#-roadmap)
-[![Último commit](https://img.shields.io/github/last-commit/alissonavm911/StockControl?style=for-the-badge&logo=github)](https://github.com/alissonavm911/StockControl/commits/main)
-[![Repo size](https://img.shields.io/github/repo-size/alissonavm911/StockControl?style=for-the-badge&logo=github)](https://github.com/alissonavm911/StockControl)
 
 </div>
 
