@@ -6,4 +6,10 @@ riderModule.iml
 StockControl.sln
 .idea
 *.DotSettings.user
-*.DotSettings
+   *.DotSettings
+
+# Release files
+/releases/
+/releases-compressed/
+*.zip
+*.tar.gz
