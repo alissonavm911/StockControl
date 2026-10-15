@@ -1,6 +1,8 @@
 using StockControl.Exceptions;
 using StockControl.Handlers;
+using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace StockControl.Utils
 {
@@ -13,6 +15,7 @@ namespace StockControl.Utils
 
         // The extension in data saved file
         private static readonly string DefaultExtension = ".json";
+        private static readonly JsonSerializerOptions JsonOptions = CreateJsonOptions();
 
         public static bool SaveToFile<TProduct>(string fileName, List<TProduct>? content)
         {
@@ -30,7 +33,7 @@ namespace StockControl.Utils
                     return false;
                 }
 
-                var jsonString = JsonSerializer.Serialize(content, new JsonSerializerOptions { WriteIndented = true });
+                var jsonString = JsonSerializer.Serialize(content, JsonOptions);
                 temporaryPath = $"{fullPath}.{Guid.NewGuid():N}.tmp";
                 File.WriteAllText(temporaryPath, jsonString);
                 File.Move(temporaryPath, fullPath, true);
@@ -82,13 +85,55 @@ namespace StockControl.Utils
 
                 var content = File.ReadAllText(fullPath);
 
-                return JsonSerializer.Deserialize<List<T>>(content) ?? new List<T>();
+                return JsonSerializer.Deserialize<List<T>>(content, JsonOptions) ?? new List<T>();
             }
             catch (Exception ex)
             {
                 HandlerException.HandleException(
                     new FileOperationException("Error occurred while reading from file: " + ex.Message), false);
                 return null;
+            }
+        }
+
+        private static JsonSerializerOptions CreateJsonOptions()
+        {
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            options.Converters.Add(new DateOnlyJsonConverter());
+            return options;
+        }
+
+        private sealed class DateOnlyJsonConverter : JsonConverter<DateOnly>
+        {
+            public override DateOnly Read(
+                ref Utf8JsonReader reader,
+                Type typeToConvert,
+                JsonSerializerOptions options)
+            {
+                if (reader.TokenType != JsonTokenType.String)
+                {
+                    throw new JsonException("Expected a date string.");
+                }
+
+                var value = reader.GetString();
+                if (DateOnly.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+                {
+                    return date;
+                }
+
+                if (DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dateTime))
+                {
+                    return DateOnly.FromDateTime(dateTime);
+                }
+
+                throw new JsonException($"Invalid date value: {value}");
+            }
+
+            public override void Write(
+                Utf8JsonWriter writer,
+                DateOnly value,
+                JsonSerializerOptions options)
+            {
+                writer.WriteStringValue(value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             }
         }
     }

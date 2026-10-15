@@ -3,7 +3,7 @@ using StockControl.Utils;
 namespace StockControl.Models
 {
     public sealed record CategoryInventorySummary(
-        ProductCategory Category,
+        EProductCategory Category,
         int ProductCount,
         ulong TotalQuantity,
         decimal TotalValue);

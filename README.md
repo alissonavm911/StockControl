@@ -1,204 +1,460 @@
 <div align="center">
 
-# 📦 StockControl
+# 📦 Stock Control
 
-**Sistema de controle de estoque e vendas em console, desenvolvido em C# com .NET.**
+**Sistema de controle de estoque e vendas em console, desenvolvido em C# com .NET 10.**
 
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![C#](https://img.shields.io/badge/C%23-14-239120?style=for-the-badge&logo=csharp&logoColor=white)](https://learn.microsoft.com/dotnet/csharp/)
 [![PDFsharp](https://img.shields.io/badge/PDFsharp-6.2.4-C0392B?style=for-the-badge&logo=adobeacrobatreader&logoColor=white)](https://www.pdfsharp.com/)
-[![Aplicação](https://img.shields.io/badge/Aplica%C3%A7%C3%A3o-Console-4D4D4D?style=for-the-badge&logo=windowsterminal&logoColor=white)](#-como-executar)
-
-[![Curso](https://img.shields.io/badge/Curso-Fundamentos%20de%20C%23-7B2CBF?style=for-the-badge)](https://balta.io)
-[![balta.io](https://img.shields.io/badge/Feito%20com%20base%20no%20curso-balta.io-7B2CBF?style=for-the-badge)](https://balta.io)
-[![Status](https://img.shields.io/badge/Status-Em%20desenvolvimento-F4B400?style=for-the-badge)](#-roadmap)
 
 </div>
 
 ---
 
-## 📖 Sobre o projeto
+## 📋 Visão Geral
 
-O **StockControl** é uma aplicação de console para gerenciar o estoque de uma loja: cadastro, edição, remoção e consulta de produtos, com visão do inventário por categoria e **exportação de relatórios em TXT e PDF**.
+**Stock Control** é uma aplicação de propósito geral para pequenos e médios negócios que necessitam controlar inventário e registrar transações de vendas. O sistema oferece gerenciamento completo de produtos, cadastro de vendas, relatórios analíticos e exportação em múltiplos formatos (TXT e PDF).
 
-O projeto foi desenvolvido **com base no curso _Fundamentos de C#_ da [balta.io](https://balta.io)**. A partir dos conceitos vistos no curso, a proposta aqui foi ir além do exercício básico: organizar o código em camadas, tratar erros de forma centralizada, persistir os dados em disco e gerar relatórios.
+### Principais características
 
-> 🎓 Este é um projeto de estudo e não possui vínculo oficial com a balta.io.
+- ✅ **Gestão de Produtos**: Criar, atualizar, remover e consultar produtos com categorização
+- ✅ **Controle de Estoque**: Visualização em tempo real das quantidades e valores
+- ✅ **Registro de Vendas**: Cadastro de transações com múltiplos itens por venda
+- ✅ **Relatórios Avançados**: Exportação de dados em TXT ou PDF com análises consolidadas
+- ✅ **Alertas de Reabastecimento**: Identificação automática de produtos com baixo estoque
+- ✅ **Persistência Segura**: Arquivos JSON com validação e backup automático
 
-## ✨ Funcionalidades
+---
 
-| Menu | Funcionalidade | Status |
-| :--: | -------------- | :----: |
-| 1 | **Adicionar produto** (nome, preço, quantidade e categoria) | ✅ |
-| 2 | **Remover produto** pelo ID (GUID) | ✅ |
-| 3 | **Atualizar produto** — campos em branco mantêm o valor atual | ✅ |
-| 4 | **Listar produtos** com paginação (nome e preço) | ✅ |
-| 5 | Registrar venda | 🚧 Não implementado |
-| 6 | **Ver inventário** detalhado com paginação (ID, nome, quantidade, preço e categoria) | ✅ |
-| 7 | **Exportar relatório de estoque** em **TXT** ou **PDF** | ✅ |
-| 8 | Ver vendas | 🚧 Não implementado |
-| 9 | Relatório financeiro | 🚧 Não implementado |
-| 0 | **Sair** salvando os dados | ✅ |
+## 🏗️ Arquitetura
 
-### Destaques
-
-- **Interface de console colorida**, com bordas e posicionamento de cursor, exigindo um terminal de pelo menos **103 colunas × 22 linhas** (no Windows o redimensionamento é automático).
-- **Persistência em JSON** na pasta de dados do usuário, com gravação atômica (arquivo temporário + `File.Move`) para evitar corromper o inventário.
-- **Relatório de estoque** com resumo geral, totais por categoria e detalhes de cada produto, formatado em `pt-BR`.
-- **Tratamento de erros centralizado**, com exceções próprias e uma tela de erro padronizada que devolve o usuário ao menu.
-- **11 categorias** de produto: Electronics, Clothing, Food, Furniture, Books, Toys, Sports, Beauty, Automotive, Health e Other.
-
-## 🛠️ Tecnologias
-
-- [C#](https://learn.microsoft.com/dotnet/csharp/) com [.NET 10](https://dotnet.microsoft.com/) (`net10.0`)
-- `System.Text.Json` para serialização do inventário
-- [PDFsharp 6.2.4](https://www.pdfsharp.com/) para geração dos relatórios em PDF
-- Recursos da linguagem: `record`, `record struct`, `enum`, *nullable reference types*, `required` members, LINQ e `ImplicitUsings`
-
-## 🗂️ Estrutura do projeto
-
-```text
-StockControl/
-├── Controllers/
-│   ├── MenuController.cs       # Desenha o menu principal
-│   └── ProductController.cs    # Telas de produto, inventário e exportação
-├── Services/
-│   ├── MenuService.cs          # Direciona a opção escolhida no menu
-│   └── ProductService.cs       # Validações e regras de negócio
-├── Data/
-│   └── Stock.cs                # Estoque em memória + carga inicial do JSON
-├── Models/
-│   ├── Product.cs              # Entidade Product (Id GUID gerado automaticamente)
-│   ├── ProductDTO.cs           # Dados de entrada (campos opcionais)
-│   └── InventoryReport.cs      # Relatório e resumo por categoria
-├── Exceptions/
-│   └── Exceptions.cs           # Exceções personalizadas do domínio
-├── Handlers/
-│   └── HandlerException.cs     # Mensagens de erro padronizadas
-├── Utils/
-│   ├── Background.cs           # Cores e bordas do console
-│   ├── ConsoleSize.cs          # Garante o tamanho mínimo do terminal
-│   ├── Exit.cs                 # Encerramento e salvamento dos dados
-│   ├── FileManager.cs          # Leitura e escrita do JSON
-│   ├── InventoryReportExporter.cs  # Exportação TXT/PDF
-│   ├── PathValidator.cs        # Validação de caminhos
-│   └── ProductCategory.cs      # Enum de categorias
-├── Program.cs                  # Ponto de entrada
-├── StockControl.csproj
-└── StockControl.sln
+```
+Stock Control
+├── Controllers/       → Camada de apresentação (entrada/saída console)
+├── Services/          → Camada de negócio (validação e regras)
+├── Data/              → Camada de dados (memória + persistência)
+├── Models/            → Entidades e DTOs
+├── Utils/             → Utilitários (PDF, validação, categorias)
+├── Exceptions/        → Definições de erros do domínio
+├── Handlers/          → Tratamento centralizado de exceções
+└── Program.cs         → Ponto de entrada
 ```
 
-A organização segue uma separação simples em camadas: **Controllers** cuidam da interação com o usuário, **Services** validam e aplicam as regras, e **Data** mantém o estado do estoque.
+### Fluxo de dados
 
-## 🚀 Como executar
+```
+Entrada (Console)
+       ↓
+   Controllers
+       ↓
+   Services (Validação)
+       ↓
+   Data Layer (Stock/SalesRepository)
+       ↓
+   FileManager (JSON)
+       ↓
+%APPDATA%\StockControl\
+```
 
-### Pré-requisitos
+---
 
-- [.NET SDK 10](https://dotnet.microsoft.com/download) instalado
-- Um terminal com pelo menos **103 × 22** caracteres
+## 🚀 Começar Rápido
 
-### Passo a passo
+### Requisitos
 
+- **.NET 10 SDK** ou superior
+- **Windows** (font setup para PDF) ou **Linux/macOS** (suporte experimental)
+- **Terminal** com suporte a cores e redimensionamento (mínimo 103×22 caracteres)
+
+### Instalação
+
+1. Clone o repositório:
 ```bash
-# 1. Clone o repositório
-git clone https://github.com/alissonavm911/StockControl.git
-
-# 2. Entre na pasta do projeto
+git clone <repository-url>
 cd StockControl
+```
 
-# 3. Restaure as dependências
+2. Restaure as dependências:
+```bash
 dotnet restore
+```
 
-# 4. Execute
+3. Compile o projeto:
+```bash
+dotnet build
+```
+
+4. Execute:
+```bash
 dotnet run
 ```
 
-Para gerar uma versão otimizada:
+### Primeira execução
+
+Na primeira execução, o sistema criará automaticamente:
+- Pasta de dados: `%APPDATA%\StockControl\` (Windows)
+- Arquivo de estoque: `inventory.json`
+- Arquivo de vendas: `sales.json`
+
+---
+
+## 📖 Guia de Uso
+
+### Menu Principal
+
+| Opção | Funcionalidade | Descrição |
+|-------|---|---|
+| **1** | Add Product | Cadastrar novo produto (nome, preço, quantidade, categoria) |
+| **2** | Remove Product | Remover produto por ID |
+| **3** | Update Product | Atualizar dados do produto (campos opcionais) |
+| **4** | View Products | Listar todos os produtos (paginado) |
+| **5** | View Inventory | Consultar estoque detalhado por produto |
+| **6** | Export Inventory Report | Gerar relatório de estoque em TXT ou PDF |
+| **7** | Register Sale | Registrar uma nova venda com múltiplos itens |
+| **8** | Remove Sale | Remover venda registrada por ID |
+| **9** | View Sales | Consultar histórico de vendas (paginado) |
+| **10** | Financial Report | Gerar relatório financeiro em TXT ou PDF |
+| **0** | Exit | Encerrar e salvar dados |
+
+### Categorias de Produto
+
+O sistema inclui 11 categorias padrão:
+
+1. Electronics
+2. Clothing
+3. Food
+4. Furniture
+5. Books
+6. Toys
+7. Sports
+8. Beauty
+9. Automotive
+10. Health
+11. Other
+
+### Relatórios
+
+#### Inventory Report (Estoque)
+- Quantidade de tipos de produto
+- Unidades totais em estoque
+- Valor total do inventário
+- Resumo por categoria
+- Detalhamento completo de cada produto
+
+#### Financial Report (Vendas)
+- Total de vendas realizadas
+- Receita total
+- Unidades vendidas
+- Ticket médio de venda
+- Primeiro e último registro de venda
+- **Produtos para reabastecer** (< 3 unidades)
+- **Top 5 produtos mais vendidos**
+- **Receita por categoria**
+- Lista completa de todas as transações
+
+---
+
+## 🏢 Estrutura do Projeto
+
+### Controllers
+
+#### `MenuController.cs`
+Apresenta o menu principal, valida tamanho da tela e orquestra chamadas aos demais controllers.
+
+#### `ProductController.cs`
+Interface de CRUD para produtos e inventário:
+- `AddProduct()` → Cadastro com validações
+- `RemoveProduct()` → Remove por GUID
+- `UpdateProduct()` → Atualização parcial
+- `ViewProducts()` → Listagem paginada
+- `ViewInventory()` → Visão completa do estoque
+- `ExportInventoryReport()` → Exportação em TXT/PDF
+
+#### `SaleController.cs`
+Gerenciamento de transações de vendas:
+- `AddSale()` → Fluxo de registro com data, produtos e quantidades
+- `RemoveSale()` → Remove venda por GUID
+- `ViewSales()` → Consulta de histórico (paginada)
+- `ExportFinancialReport()` → Exportação de relatório financeiro
+
+### Services
+
+#### `ProductService.cs`
+Regras de negócio para produtos:
+- Validação de nome único (case-insensitive)
+- Preço e quantidade não-negativos
+- Categoria válida
+- Geração de `InventoryReport`
+
+#### `SaleService.cs`
+Orquestração de vendas:
+- Verificação de disponibilidade de produtos
+- Cálculo de valor total
+- Atualização de quantidades em estoque
+- Geração de `FinancialReport`
+
+#### `MenuService.cs`
+Despachante central de opções do menu.
+
+### Data Layer
+
+#### `Stock.cs`
+Repositório em memória de produtos:
+- Carrega `inventory.json` no startup
+- Operações CRUD
+- `GetProductsSnapshot()` para consultas seguras
+
+#### `Sales.cs` (`SalesRepository`)
+Repositório em memória de vendas:
+- Carrega `sales.json` no startup
+- Operações CRUD
+- `GetSalesSnapshot()` para consultas seguras
+
+### Models
+
+#### `Product` (struct)
+```csharp
+record struct Product
+{
+    Guid Id              // Auto-gerado
+    string Name          // Obrigatório, único
+    decimal Price        // ≥ 0
+    uint Quantity        // Quantidade em estoque
+    EProductCategory Category
+}
+```
+
+#### `Sale` e `SaleItem` (structs)
+```csharp
+record struct Sale
+{
+    Guid Id
+    DateOnly Date
+    List<SaleItem> Items
+    decimal TotalValue
+}
+
+record struct SaleItem
+{
+    Product Product
+    uint Quantity        // Quantidade vendida
+    decimal Value        // Valor total do item
+}
+```
+
+#### `InventoryReport`
+Agregação de dados de estoque com totalizações por categoria.
+
+#### `FinancialReport`
+Agregação de dados de vendas com análises de receita, top produtos e alertas de reabastecimento.
+
+### Utils
+
+#### `InventoryReportExporter.cs`
+Exportação de relatório de estoque em TXT ou PDF com:
+- Quebra automática de linhas em PDF
+- Formatação em português (pt-BR)
+- Arquivo temporário + Move atômico
+
+#### `FinancialReportExporter.cs`
+Exportação de relatório financeiro em TXT ou PDF com mesmo padrão de segurança e formatação.
+
+#### `FileManager.cs`
+Gerenciamento de persistência JSON:
+- `SaveToFile()` → Escrita com backup temporário
+- `ReadFromFile()` → Leitura com tratamento de erros
+- Conversor customizado para `DateOnly`
+
+#### `PathValidator.cs`
+Validação de caminhos de arquivo e criação de diretórios.
+
+#### `Background.cs`
+Utilitários de renderização de menu (cores, bordas ASCII).
+
+#### `ConsoleSize.cs`
+Verificação e ajuste de tamanho de terminal (mínimo 103×22).
+
+#### `Exit.cs`
+Encerramento seguro com persistência de dados.
+
+#### `EProductCategory.cs`
+Enumeração de categorias de produto (1-11).
+
+#### `PdfFontSetup.cs`
+Configuração de fontes Windows para PDFsharp.
+
+---
+
+## 💾 Persistência de Dados
+
+### Localização
+
+- **Windows**: `%APPDATA%\StockControl\`
+- **Linux/macOS**: `~/.local/share/StockControl/` (experimental)
+
+### Arquivos
+
+- `inventory.json` → Lista de produtos
+- `sales.json` → Lista de vendas
+
+### Segurança
+
+- Escrita via arquivo temporário + `File.Move()` atômico
+- Validação de JSON na leitura
+- Conversão segura de `DateOnly`
+- Se arquivo estiver corrompido, sistema aborta writes para não sobrescrever
+
+### Timing
+
+Dados são salvos **apenas** no encerramento do programa (opção 0 ou fechamento do console). Operações em memória são imediatas, mas não persistem até a saída.
+
+---
+
+## 🔒 Tratamento de Erros
+
+O projeto implementa exceções customizadas do domínio:
+
+| Exceção | Contexto |
+|---------|----------|
+| `ProductInformationInvalidException` | Validação de produto |
+| `ProductNotFoundException` | Produto não encontrado |
+| `SaleNotFoundException` | Venda não encontrada |
+| `SaleInformationInvalidException` | Validação de venda |
+| `InvalidPathException` | Caminho de arquivo inválido |
+| `FileOperationException` | Erro ao ler/escrever arquivo |
+| `OptionNotFoundException` | Opção de menu inválida |
+| `ErrorOperationException` | Erro genérico de operação |
+
+Todas são tratadas centralmente por `HandlerException` que exibe mensagem ao usuário e aguarda confirmação.
+
+---
+
+## 🔧 Desenvolvimento
+
+### Compilação
 
 ```bash
-dotnet build -c Release
+dotnet build
 ```
 
-## 💾 Onde ficam os dados?
+### Execução com Debug
 
-O inventário é salvo no arquivo `inventory.json`, dentro da pasta `StockControl` do diretório de dados do usuário (`Environment.SpecialFolder.ApplicationData`):
-
-| Sistema | Caminho aproximado |
-| ------- | ------------------ |
-| Windows | `%APPDATA%\StockControl\inventory.json` |
-| Linux | `~/.config/StockControl/inventory.json` |
-| macOS | `~/.config/StockControl/inventory.json` |
-
-> ⚠️ Os dados são gravados **somente ao sair pela opção `0` do menu**. Fechar a janela do terminal diretamente descarta as alterações feitas na sessão.
-
-Se o arquivo existir, mas estiver inválido, o sistema **não o sobrescreve**: ele avisa que o inventário não pôde ser carregado e encerra sem salvar.
-
-## 📄 Exemplo de relatório exportado
-
-```text
-RELATÓRIO DE ESTOQUE
-Gerado em: 12/10/2026 09:35
-
-RESUMO
-Tipos de produto: 2
-Unidades em estoque: 15
-Valor total em estoque: R$ 1.250,00
-
-TOTAIS POR CATEGORIA
-Electronics: 1 produto(s), 5 unidade(s), R$ 1.000,00
-...
-
-PRODUTOS
-ID: 3f2b8c1e-...
-Nome: Teclado Mecânico
-Categoria: Electronics
-Quantidade: 5
-Preço unitário: R$ 200,00
-Valor em estoque: R$ 1.000,00
+```bash
+dotnet run --configuration Debug
 ```
 
-> Valores meramente ilustrativos.
+### Publicação (Release)
 
-## 🧠 Conceitos praticados
+```bash
+dotnet publish -c Release -r win-x64 --self-contained
+```
 
-- Tipos, variáveis, operadores e estruturas de controle (`switch`, `while`, `for`, `foreach`)
-- Enumeradores, `struct`, `record` e `record struct`
-- Tratamento de exceções com classes personalizadas
-- Coleções (`List<T>`), LINQ e *nullable types*
-- Manipulação de arquivos e serialização JSON
-- Organização de código com *namespaces* e classes estáticas
+### Dependências
 
-## 🗺️ Roadmap
+- **PDFsharp 6.2.4** → Geração de relatórios em PDF
 
-- [x] Cadastro, edição, remoção e listagem de produtos
-- [x] Inventário detalhado e paginado
-- [x] Persistência em JSON
-- [x] Exportação de relatório em TXT e PDF
-- [ ] Registro de vendas
-- [ ] Histórico de vendas
-- [ ] Relatório financeiro
+---
 
-## 🤝 Contribuindo
+## 📋 Checklist de Funcionalidades
 
-Sugestões e melhorias são bem-vindas:
+### Produtos
+- ✅ Criar produto
+- ✅ Remover produto
+- ✅ Atualizar produto
+- ✅ Listar produtos
+- ✅ Categorizar produto
+- ✅ Validação de nome único
 
-1. Faça um *fork* do projeto
-2. Crie uma branch: `git checkout -b feature/minha-feature`
-3. Faça o commit: `git commit -m "feat: minha feature"`
-4. Envie a branch: `git push origin feature/minha-feature`
-5. Abra um *Pull Request*
+### Inventário
+- ✅ Visualizar estoque
+- ✅ Controlar quantidade
+- ✅ Calcular valor total
+- ✅ Resumo por categoria
+- ✅ Exportar relatório (TXT/PDF)
 
-## 🙏 Agradecimentos
+### Vendas
+- ✅ Registrar venda com múltiplos itens
+- ✅ Remover venda
+- ✅ Consultar histórico
+- ✅ Validar disponibilidade de estoque
+- ✅ Atualizar quantidades automaticamente
 
-- À [balta.io](https://balta.io) e ao curso **Fundamentos de C#**, que serviu de base para este projeto
-- À comunidade .NET pela documentação e pelo apoio
+### Relatórios
+- ✅ Relatório de estoque detalhado
+- ✅ Análise financeira de vendas
+- ✅ Top 5 produtos mais vendidos
+- ✅ Receita por categoria
+- ✅ Alertas de reabastecimento
+- ✅ Exportação em TXT e PDF
 
-## 👤 Autor
+### UX/Sistema
+- ✅ Menu navegável
+- ✅ Paginação em listagens
+- ✅ Validação de entrada
+- ✅ Tratamento de erro centralizado
+- ✅ Verificação de tamanho de terminal
+- ✅ Persistência segura
 
-Feito por **[@alissonavm911](https://github.com/alissonavm911)**.
+---
 
-<div align="center">
+## 🤝 Contribuição
 
-⭐ Se este projeto te ajudou de alguma forma, deixe uma estrela no repositório!
+Para contribuir ao projeto:
 
-</div>
+1. Faça fork do repositório
+2. Crie uma branch para sua feature (`git checkout -b feature/NovaFuncionalidade`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/NovaFuncionalidade`)
+5. Abra um Pull Request
+
+### Padrões de código
+
+- Siga as convenções C# (PascalCase para classes, camelCase para variáveis)
+- Utilize `record` para modelos imutáveis
+- Mantenha a separação entre camadas (Controllers → Services → Data)
+- Adicione tratamento de exceção apropriado
+- Documente métodos públicos com XML comments quando necessário
+
+---
+
+## 📝 Licença
+
+Este projeto está sob licença MIT. Veja o arquivo `LICENSE` para detalhes.
+
+---
+
+## 📞 Suporte
+
+Para relatórios de bugs, sugestões ou dúvidas:
+
+- Abra uma issue no repositório
+- Descreva o problema com precisão
+- Inclua passos para reproduzir (se aplicável)
+- Forneça versão do .NET e SO
+
+---
+
+## 🎯 Roadmap Futuro
+
+- [ ] Interface gráfica (WPF/MAUI)
+- [ ] API REST para integração
+- [ ] Banco de dados SQL
+- [ ] Autenticação de usuários
+- [ ] Dashboard com gráficos
+- [ ] Importação em lote (CSV/Excel)
+- [ ] Histórico de alterações (audit log)
+- [ ] Backup automático em nuvem
+
+---
+
+## 📊 Versão
+
+**Stock Control v1.0.0**
+- Lançamento: Outubro 2026
+- Framework: .NET 10
+- Linguagem: C#
+
+---
+
+Desenvolvido com ❤️ para gestão eficiente de estoque e vendas.

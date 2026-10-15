@@ -38,11 +38,8 @@ namespace StockControl.Utils
                 Console.SetCursorPosition(leftMargin, 2);
                 Console.WriteLine("Saving data in secure form.... Don't the Terminal!");
                 Thread.Sleep(3000);
-                if (!FileManager.SaveToFile("inventory", Stock.GetProducts()))
-                {
-                    return;
-                }
-
+                if (!FileManager.SaveToFile("inventory", Stock.GetProducts())) return;
+                if (!FileManager.SaveToFile("sales", SalesRepository.GetSales())) return;
                 Thread.Sleep(1000);
                 Console.SetCursorPosition(leftMargin, 3);
                 Console.WriteLine("Data saved successfully!");

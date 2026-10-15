@@ -7,6 +7,6 @@ namespace StockControl.Models
         public string? Name { get; set; }
         public decimal? Price { get; set; }
         public uint? Quantity { get; set; }
-        public ProductCategory? Category { get; set; }
+        public EProductCategory? Category { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace StockControl.Data
     {
         private static List<Product> Products { get; } = new();
         private const string DefaultFileName = "inventory";
-        public static bool IsInitialized { get; private set; }
+        public static bool IsInitialized { get; }
 
         static Stock()
         {
@@ -34,7 +34,6 @@ namespace StockControl.Data
                 HandlerException.HandleException(new InitializeStockException(ex.Message), false);
             }
         }
-
         public static bool AddProduct(Product product)
         {
             if (!EnsureInitialized())
@@ -54,7 +53,6 @@ namespace StockControl.Data
                 return false;
             }
         }
-
         public static bool RemoveProduct(Product product)
         {
             if (!EnsureInitialized())
@@ -67,7 +65,8 @@ namespace StockControl.Data
                 var productIndex = Products.FindIndex(p => p.Id == product.Id);
                 if (productIndex < 0)
                 {
-                    HandlerException.HandleException(new ProductNotFoundException("Product not found in the stock."));
+                    HandlerException.HandleException(
+                        new ProductNotFoundException("Product not found in the stock."));
                     return false;
                 }
 
@@ -81,12 +80,10 @@ namespace StockControl.Data
                 return false;
             }
         }
-
         public static List<Product> GetProducts()
         {
             return Products;
         }
-
         public static IReadOnlyList<Product>? GetProductsSnapshot()
         {
             if (!EnsureInitialized())
@@ -105,7 +102,6 @@ namespace StockControl.Data
                 return null;
             }
         }
-
         public static Product GetProductById(Guid id)
         {
             if (!EnsureInitialized())
@@ -131,7 +127,6 @@ namespace StockControl.Data
                 return default;
             }
         }
-
         public static bool UpdateProduct(Product updatedProduct)
         {
             if (!EnsureInitialized())
@@ -158,7 +153,6 @@ namespace StockControl.Data
                 return false;
             }
         }
-
         private static bool EnsureInitialized()
         {
             if (IsInitialized)

@@ -1,4 +1,3 @@
-using StockControl.Controllers;
 using StockControl.Utils;
 using StockControl.Exceptions;
 
@@ -20,6 +19,9 @@ namespace StockControl.Handlers
                 OptionNotFoundException => "Option not found",
                 FileOperationException => "Error in file operation",
                 InvalidPathException => "Invalid path",
+                InitializeSalesException => "Error while initializing sales",
+                SaleNotFoundException => "Sale not found",
+                SaleInformationInvalidException => "Invalid sale information",
                 _ => "An error occurred"
             };
 
@@ -50,7 +52,6 @@ namespace StockControl.Handlers
             Console.SetCursorPosition(3, 4);
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
-            MenuController.Menu();
         }
     }
 }
