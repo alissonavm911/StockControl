@@ -19,11 +19,12 @@ namespace StockControl.Services
                     case 2: ProductController.RemoveProduct(); break;
                     case 3: ProductController.UpdateProduct(); break;
                     case 4: ProductController.ViewProducts(); break;
-                    case 5: SaleController.AddSale(); break;
-                    case 6: ProductController.ViewInventory(); break;
-                    case 7: ProductController.ExportInventoryReport(); break;
-                    case 8: break;
-                    case 9: break;
+                    case 5: ProductController.ViewInventory(); break;
+                    case 6: ProductController.ExportInventoryReport(); break;
+                    case 7: SaleController.AddSale(); break;
+                    case 8: SaleController.RemoveSale(); break;
+                    case 9: SaleController.ViewSales(); break;
+                    case 10: break;
                     case 0: Exit.ExitProgram(); break;
                     default: HandlerException.HandleException(new OptionNotFoundException("Option not found. Please enter a valid option.")); break;
                 }

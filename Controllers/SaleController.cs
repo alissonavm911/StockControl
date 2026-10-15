@@ -1,3 +1,5 @@
+using StockControl.Exceptions;
+using StockControl.Handlers;
 using StockControl.Models;
 using StockControl.Services;
 using StockControl.Utils;
@@ -105,6 +107,163 @@ namespace StockControl.Controllers
                 Console.SetCursorPosition(leftMargin, 4);
                 Console.WriteLine("Enter a quantity greater than zero.");
             }
+        }
+
+        public static void RemoveSale()
+        {
+            if (!ConsoleSize.EnsureMinimumSize())
+            {
+                return;
+            }
+
+            Console.Clear();
+            Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+            Background.MenuBorder(8, 70);
+            const int leftMargin = 3;
+            Console.SetCursorPosition(leftMargin, 2);
+            Console.WriteLine("Remove Sale");
+            Console.SetCursorPosition(leftMargin, 3);
+            Console.WriteLine("-----------");
+            Console.SetCursorPosition(leftMargin, 4);
+            Console.Write("Enter sale ID: ");
+
+            if (!Guid.TryParse(Console.ReadLine(), out var saleId))
+            {
+                HandlerException.HandleException(
+                    new SaleInformationInvalidException("Sale ID is invalid."));
+                return;
+            }
+
+            try
+            {
+                if (!SaleService.RemoveSale(saleId))
+                {
+                    return;
+                }
+            }
+            catch (SaleNotFoundException ex)
+            {
+                HandlerException.HandleException(ex);
+                return;
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while removing the sale: " + ex.Message));
+                return;
+            }
+
+            Console.Clear();
+            Background.MenuBorder(5, 50);
+            Console.SetCursorPosition(leftMargin, 2);
+            Console.WriteLine("Sale removed successfully!");
+            Console.SetCursorPosition(leftMargin, 3);
+            Console.WriteLine("Press any key to return to the menu...");
+            Console.ReadKey(true);
+        }
+
+        public static void ViewSales()
+        {
+            try
+            {
+                if (!ConsoleSize.EnsureMinimumSize())
+                {
+                    return;
+                }
+
+                var leftMargin = 3;
+                var sales = SaleService.GetSales();
+                if (sales == null)
+                {
+                    return;
+                }
+
+                if (sales.Count == 0)
+                {
+                    Console.Clear();
+                    Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+                    Background.MenuBorder(8, GetBorderWidth());
+                    Console.SetCursorPosition(leftMargin, 4);
+                    Console.WriteLine("No sales available.");
+                    Console.SetCursorPosition(leftMargin, 6);
+                    Console.WriteLine("Press any key to return to the menu...");
+                    Console.ReadKey();
+                    return;
+                }
+
+                var page = 0;
+                var totalPages = sales.Count;
+
+                while (true)
+                {
+                    if (!ConsoleSize.EnsureMinimumSize())
+                    {
+                        return;
+                    }
+
+                    var sale = sales[page];
+                    var items = sale.Items ?? new List<SaleItem>();
+                    var itemLines = Math.Max(1, items.Count);
+                    Console.Clear();
+                    Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+                    Background.MenuBorder(10 + itemLines, GetBorderWidth());
+                    Console.SetCursorPosition(leftMargin, 2);
+                    Console.WriteLine("View Sales");
+                    Console.SetCursorPosition(leftMargin, 3);
+                    Console.WriteLine("------------------------------------------------------------------");
+                    Console.SetCursorPosition(leftMargin, 4);
+                    Console.WriteLine($"Sale Id: {sale.Id}");
+                    Console.SetCursorPosition(leftMargin, 5);
+                    Console.WriteLine($"Date: {sale.Date:yyyy-MM-dd}");
+                    Console.SetCursorPosition(leftMargin, 6);
+                    Console.WriteLine($"Total: {sale.TotalValue:C}");
+                    Console.SetCursorPosition(leftMargin, 7);
+                    Console.WriteLine("Items:");
+
+                    if (items.Count == 0)
+                    {
+                        Console.SetCursorPosition(leftMargin, 8);
+                        Console.WriteLine("No items in this sale.");
+                    }
+                    else
+                    {
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            var item = items[i];
+                            Console.SetCursorPosition(leftMargin, 8 + i);
+                            Console.WriteLine(
+                                $"Name: {item.Product.Name} | Quantity: {item.Quantity} | Value: {item.Value:C}");
+                        }
+                    }
+
+                    Console.SetCursorPosition(leftMargin, 8 + itemLines);
+                    Console.WriteLine("---------------------");
+                    Console.SetCursorPosition(leftMargin, 9 + itemLines);
+                    Console.WriteLine($"Page {page + 1}/{totalPages} | N: next | P: previous | Q: return");
+                    var key = Console.ReadKey(true).Key;
+                    if (key == ConsoleKey.N && page < totalPages - 1)
+                    {
+                        page++;
+                    }
+                    else if (key == ConsoleKey.P && page > 0)
+                    {
+                        page--;
+                    }
+                    else if (key != ConsoleKey.N && key != ConsoleKey.P)
+                    {
+                        return;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(ex.Message));
+            }
+        }
+
+        private static int GetBorderWidth()
+        {
+            return Math.Max(1, Math.Min(100, Console.WindowWidth - 2));
         }
 
         private static int ReadInteger(string label, int leftMargin, int top, int minimum, int maximum)

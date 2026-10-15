@@ -44,4 +44,8 @@ namespace StockControl.Exceptions
     {
         public SaleNotFoundException(string message) : base(message) { }
     }
+    public class SaleInformationInvalidException : Exception
+    {
+        public SaleInformationInvalidException(string message) : base(message) { }
+    }
 }

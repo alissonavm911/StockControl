@@ -17,13 +17,10 @@ namespace StockControl.Controllers
                     {
                         return;
                     }
-
                     var backgroundColor = ConsoleColor.DarkCyan;
                     var foregroundColor = ConsoleColor.White;
                     Background.MenuColor(backgroundColor, foregroundColor);
-
-                    Background.MenuBorder(18, 100);
-
+                    Background.MenuBorder(20, 100);
                     var leftMargin = 4;
                     Console.SetCursorPosition(leftMargin, 1);
                     Console.Write("Stock Control System");
@@ -38,20 +35,22 @@ namespace StockControl.Controllers
                     Console.SetCursorPosition(leftMargin, 6);
                     Console.WriteLine("4. View Products ");
                     Console.SetCursorPosition(leftMargin, 7);
-                    Console.WriteLine("5. Register Sale ");
+                    Console.WriteLine("5. View Inventory ");
                     Console.SetCursorPosition(leftMargin, 8);
-                    Console.WriteLine("6. View Inventory ");
+                    Console.WriteLine("6. Export Inventory Report");
                     Console.SetCursorPosition(leftMargin, 9);
-                    Console.WriteLine("7. Export Inventory Report");
+                    Console.WriteLine("7. Register Sale ");
                     Console.SetCursorPosition(leftMargin, 10);
-                    Console.WriteLine("8. View Sales (Not Implemented)");
+                    Console.WriteLine("8. Remove Sale");
                     Console.SetCursorPosition(leftMargin, 11);
-                    Console.WriteLine("9. Financial Report (Not Implemented)");
-                    Console.SetCursorPosition(leftMargin, 13);
+                    Console.WriteLine("9. View Sales ");
+                    Console.SetCursorPosition(leftMargin, 12);
+                    Console.WriteLine("10. Financial Report (Not Implemented)");
+                    Console.SetCursorPosition(leftMargin, 14);
                     Console.WriteLine("0. Exit");
-                    Console.SetCursorPosition(leftMargin, 15);
+                    Console.SetCursorPosition(leftMargin, 16);
                     Console.WriteLine("------------------------");
-                    Console.SetCursorPosition(leftMargin, 17);
+                    Console.SetCursorPosition(leftMargin, 18);
                     Console.Write("option: ");
                     MenuService.HandleMenu(Console.ReadLine());
                 }

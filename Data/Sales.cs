@@ -39,6 +39,53 @@ namespace StockControl.Data
         {
             return Sales;
         }
+
+        public static IReadOnlyList<Sale>? GetSalesSnapshot()
+        {
+            if (!EnsureInitialized())
+            {
+                return null;
+            }
+
+            try
+            {
+                return Sales.ToArray();
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while preparing a sales snapshot: " + ex.Message));
+                return null;
+            }
+        }
+
+        public static Sale GetSaleById(Guid id)
+        {
+            if (!EnsureInitialized())
+            {
+                return default;
+            }
+
+            try
+            {
+                var sale = Sales.FirstOrDefault(s => s.Id == id);
+                if (sale.Id == Guid.Empty)
+                {
+                    HandlerException.HandleException(
+                        new SaleNotFoundException("Sale not found in the repository."));
+                    return default;
+                }
+
+                return sale;
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while getting the sale: " + ex.Message));
+                return default;
+            }
+        }
+
         public static bool AddSale(Sale sale)
         {
             if (!EnsureInitialized())
@@ -97,7 +144,8 @@ namespace StockControl.Data
                 var saleIndex = Sales.FindIndex(p => p.Id == updatedSale.Id);
                 if (saleIndex < 0)
                 {
-                    HandlerException.HandleException(new ProductNotFoundException("Product not found in the stock."));
+                    HandlerException.HandleException(
+                        new SaleNotFoundException("Sale not found in the repository."));
                     return false;
                 }
 

@@ -21,6 +21,7 @@ namespace StockControl.Handlers
                 InvalidPathException => "Invalid path",
                 InitializeSalesException => "Error while initializing sales",
                 SaleNotFoundException => "Sale not found",
+                SaleInformationInvalidException => "Invalid sale information",
                 _ => "An error occurred"
             };
 

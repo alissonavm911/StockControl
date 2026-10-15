@@ -78,5 +78,25 @@ namespace StockControl.Services
                     new ErrorOperationException("Failed to complete transaction: " + ex.Message));
             }
         }
+
+        public static IReadOnlyList<Sale>? GetSales()
+        {
+            return SalesRepository.GetSalesSnapshot();
+        }
+
+        public static bool RemoveSale(Guid id)
+        {
+            try
+            {
+                var sale = SalesRepository.GetSaleById(id);
+                return sale.Id != Guid.Empty && SalesRepository.RemoveSale(sale);
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while removing the sale: " + ex.Message));
+                return false;
+            }
+        }
     }
 }
