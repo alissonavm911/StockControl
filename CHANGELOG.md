@@ -1,61 +1,80 @@
-# CHANGELOG - Stock Control
+# 📝 Changelog - StockControl
 
-## v2.0.0 (2026-10-15)
+Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 
-### ✨ Adicionado (Added)
-- **Módulo de Vendas Completo**: Sistema de CRUD para vendas (registrar, remover, visualizar histórico)
-- **Exportação de Relatório Financeiro**: Novo recurso para gerar relatórios em TXT ou PDF com análises detalhadas
-- **Relatórios Financeiros Completos**: Inclui ganhos totais, produtos vendidos por categoria, estoque baixo (< 3 unidades), top produtos mais vendidos e receita por categoria
-- **Validação de Estoque**: Verificação automática de disponibilidade antes de concretizar vendas
-- **Persistência de Dados de Vendas**: Arquivo `sales.json` para salvar histórico de transações
-- **10 Opções no Menu**: Novas opções Registrar Venda (7), Remover Venda (8) e Ver Vendas (9)
-- **Tratamento de Exceções Centralizado**: Exceções customizadas para vendas (`SaleNotFoundException`, `SaleInformationInvalidException`)
-- **Interface de Menu Expandida**: De 6 para 10 opções com navegação aprimorada
-- **Exportação Multiplataforma**: Suporte a 5 plataformas (Windows x64/x86, Linux x64, macOS x64/ARM64)
+O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
-### 🔄 Alterado (Changed)
-- **README.md**: Atualização completa com documentação profissional, releases disponíveis e versionamento v2.0
-- **QUICK-START.md**: Instruções atualizadas para compilação e releases v2.0
-- **RELEASES.md**: Detalhes técnicos atualizados para a nova versão
-- **SETUP-SUMMARY.md**: Resumo de setup com foco na v2.0 final
-- **.csproj**: Atualização da versão do assembly para 2.0.0
-- **Versionamento**: Migração de v1.0 para v2.0 em todos os arquivos de configuração
+## [2.0.0] - 2026-10-15 - **VERSÃO FINAL**
 
-### 🐛 Corrigido (Fixed)
-- **README.md**: Remoção do roadmap futuro (projeto finalizado)
-- **Version tags**: Tag v2.0 preparada para release no GitHub
-- **Build scripts**: Atualização dos scripts BUILD-RELEASES e COMPRESS-RELEASES para v2.0
-- **MenuController.cs**: Correções de validação e estabilidade na navegação
-- **FinancialReportExporter.cs**: Otimizações na formatação de PDF e TXT
-- **InventoryReportExporter.cs**: Correções em relatórios de estoque
+> **Status: Projeto Finalizado.** Não haverá novas versões ou atualizações futuras. Esta é a versão definitiva.
 
-### 📦 Removido (Removed)
-- **Roadmap Futuro**: Removido todas as issues planejadas (Interface gráfica, API REST, Banco de dados SQL, etc.) - este é o projeto final e definitivo
+### ✨ Added
+
+- **Módulo de Vendas completo:**
+  - `feat: add sale and saleDto structs` (`Sale`, `SaleItem`, `SaleDto`)
+  - `feat: add sales data saving and exception handling` (persistência em `sales.json`)
+  - `feat: add crud methods in sales repository` (`SalesRepository` com add/view/remove)
+  - `feat: implement add, view and remove sale methods` no `SaleController` / `SaleService`
+  - `feat: add sale registration with date-only persistence` (uso de `DateOnly`)
+  - Validação de existência de produto antes da venda (`feat: validator exist product`)
+  - Cálculo automático de estoque e valor total na criação da venda (`feat: implement complete sale creation with stock calculation and validation`)
+- **Relatório Financeiro:**
+  - `feat: implement export financial report in PDF or TXT` (`FinancialReportExporter`)
+  - Receita total, ticket médio, total de vendas e unidades vendidas
+  - Top 5 produtos mais vendidos
+  - Receita por categoria
+  - Alerta de produtos para reabastecer (< 3 unidades)
+  - Lista completa de transações
+- **Menu expandido de 6 para 10 opções:**
+  - 7 - Register Sale
+  - 8 - Remove Sale
+  - 9 - View Sales
+  - 10 - Financial Report (TXT/PDF)
+- **Releases multi-plataforma:**
+  - Windows x64 / x86, Linux x64, macOS x64 / ARM64 (self-contained)
+  - Scripts `BUILD-RELEASES.bat` e `COMPRESS-RELEASES.bat` atualizados para `v2.0`
+
+### 🔄 Changed
+
+- `refactor: update models for dictionary` - modelos ajustados para dicionário
+- `refactor: remove IDE configurations files and update .gitignore` - limpeza de arquivos de IDE
+- `refactor: remove white lines` + `refactor: remove a line unsed` - limpeza de código
+- `StockControl.csproj` atualizado para `Version 2.0.0` (`AssemblyVersion` / `FileVersion`)
+- `README.md` reescrito no padrão v1.0 com badges, guia de uso, tabela de downloads e seção de versão final
+- `QUICK-START.md` atualizado para v2.0 (sistema completo Estoque + Vendas)
+
+### 🐛 Fixed
+
+- `fix: validate sales and stabilize menu navigation` - validação de vendas e estabilidade do menu
+- Correção de formatação em `FinancialReportExporter` e `InventoryReportExporter` (TXT/PDF pt-BR)
+
+### 🗑️ Removed
+
+- **Roadmap Futuro removido permanentemente** - Interface gráfica (WPF/MAUI), API REST, Banco SQL, autenticação, dashboard, importação CSV/Excel, audit log e backup em nuvem **não serão implementados**. Projeto encerrado na v2.0.
+- Branch `feat/sales` removida após merge em `main` (PR finalizado)
+- Arquivos temporários `temp-*.md` removidos
 
 ---
 
-## v1.0.0 (2026-10-01)
+## [1.0.0] - Data da tag v1.0
 
-### ✨ Adicionado
-- Controle de estoque básico
-- Gerenciamento de produtos (CRUD)
-- Relatórios de inventário em TXT e PDF
-- Persistência em JSON
-- Menu de 6 opções
+### ✨ Added
 
-### 🔄 Alterado
-- Estrutura inicial do projeto
+- Controle de estoque básico (CRUD de Produtos)
+- Controle de quantidade, preço e categoria (11 categorias)
+- Relatório de inventário em TXT e PDF
+- Persistência em `inventory.json` (`%APPDATA%\StockControl\`)
+- Menu console com 6 opções
+- Tratamento centralizado de exceções (`HandlerException`)
+- Scripts de build `scripts/` + docs `README.md`, `QUICK-START.md`, `RELEASES.md`, `SETUP-SUMMARY.md`
 
 ---
 
-## 📦 Releases Disponíveis
+## 📦 Releases
 
-| Plataforma | Download | Status |
-|------------|----------|--------|
-| **Windows x64** | [StockControl-v2.0-Windows-x64.zip](#) | ✅ Pronto |
-| **Windows x86** | [StockControl-v2.0-Windows-x86.zip](#) | ✅ Pronto |
-| **Linux x64** | [StockControl-v2.0-Linux-x64.zip](#) | ✅ Pronto |
-| **macOS x64** | [StockControl-v2.0-macOS-x64.zip](#) | ✅ Pronto |
-| **macOS ARM64** | [StockControl-v2.0-macOS-ARM64.zip](#) | ✅ Pronto |
+| Versão | Tag | Downloads |
+|--------|-----|-----------|
+| **2.0.0 (Final)** | `v2.0` | [StockControl-v2.0-Windows-x64.zip](https://github.com/alissonavm911/StockControl/releases/download/v2.0/StockControl-v2.0-Windows-x64.zip) • [StockControl-v2.0-Windows-x86.zip](https://github.com/alissonavm911/StockControl/releases/download/v2.0/StockControl-v2.0-Windows-x86.zip) • [StockControl-v2.0-Linux-x64.zip](https://github.com/alissonavm911/StockControl/releases/download/v2.0/StockControl-v2.0-Linux-x64.zip) • [StockControl-v2.0-macOS-x64.zip](https://github.com/alissonavm911/StockControl/releases/download/v2.0/StockControl-v2.0-macOS-x64.zip) • [StockControl-v2.0-macOS-ARM64.zip](https://github.com/alissonavm911/StockControl/releases/download/v2.0/StockControl-v2.0-macOS-ARM64.zip) |
+| 1.0.0 | `v1.0` | Ver página de [Releases](https://github.com/alissonavm911/StockControl/releases) |
 
-**Tamanho**: ~200-300 MB por plataforma (runtime incluído)
+**Tamanho:** ~200-300 MB por plataforma (runtime .NET 10 incluído, self-contained)

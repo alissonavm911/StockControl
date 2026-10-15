@@ -1,6 +1,6 @@
 @echo off
 REM ═══════════════════════════════════════════════════════════════════════════
-REM   StockControl v1.0 - Build Releases
+REM   StockControl v2.0 - Build Releases
 REM   Script para compilar executáveis para múltiplas plataformas
 REM ═══════════════════════════════════════════════════════════════════════════
 
@@ -10,7 +10,7 @@ REM Cores no console (simuladas com echo)
 cls
 color 0A
 
-title StockControl v1.0 - Build Releases
+title StockControl v2.0 - Build Releases
 
 REM Obter o diretório do projeto (pasta pai do script)
 set PROJECT_PATH=%~dp0..
@@ -18,7 +18,7 @@ set RELEASES_DIR=%PROJECT_PATH%\releases
 
 echo.
 echo ╔═══════════════════════════════════════════════════════════════════════════╗
-echo ║                   StockControl v1.0 - Build Releases                      ║
+echo ║                   StockControl v2.0 - Build Releases                      ║
 echo ║                                                                           ║
 echo ║  Compilando executáveis para múltiplas plataformas...                     ║
 echo ║                                                                           ║
@@ -45,19 +45,19 @@ echo ═════════════════════════
 echo.
 
 REM Windows x64
-call :compile_platform "Windows x64 (64-bit)" "win-x64" "StockControl-v1.0-Windows-x64"
+call :compile_platform "Windows x64 (64-bit)" "win-x64" "StockControl-v2.0-Windows-x64"
 
 REM Windows x86
-call :compile_platform "Windows x86 (32-bit)" "win-x86" "StockControl-v1.0-Windows-x86"
+call :compile_platform "Windows x86 (32-bit)" "win-x86" "StockControl-v2.0-Windows-x86"
 
 REM Linux x64
-call :compile_platform "Linux x64" "linux-x64" "StockControl-v1.0-Linux-x64"
+call :compile_platform "Linux x64" "linux-x64" "StockControl-v2.0-Linux-x64"
 
 REM macOS x64
-call :compile_platform "macOS x64 (Intel)" "osx-x64" "StockControl-v1.0-macOS-x64"
+call :compile_platform "macOS x64 (Intel)" "osx-x64" "StockControl-v2.0-macOS-x64"
 
 REM macOS ARM64
-call :compile_platform "macOS ARM64 (Apple Silicon)" "osx-arm64" "StockControl-v1.0-macOS-ARM64"
+call :compile_platform "macOS ARM64 (Apple Silicon)" "osx-arm64" "StockControl-v2.0-macOS-ARM64"
 
 echo.
 echo ════════════════════════════════════════════════════════════════════════════

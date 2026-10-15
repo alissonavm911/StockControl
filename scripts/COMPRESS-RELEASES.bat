@@ -1,6 +1,6 @@
 @echo off
 REM ═══════════════════════════════════════════════════════════════════════════
-REM   StockControl v1.0 - Compress Releases
+REM   StockControl v2.0 - Compress Releases
 REM   Script para comprimir releases para upload no GitHub
 REM ═══════════════════════════════════════════════════════════════════════════
 
@@ -9,7 +9,7 @@ setlocal enabledelayedexpansion
 cls
 color 0A
 
-title StockControl v1.0 - Compress Releases
+title StockControl v2.0 - Compress Releases
 
 REM Obter o diretório do projeto
 set PROJECT_PATH=%~dp0..
@@ -18,7 +18,7 @@ set COMPRESSED_DIR=%PROJECT_PATH%\releases-compressed
 
 echo.
 echo ╔═══════════════════════════════════════════════════════════════════════════╗
-echo ║                 StockControl v1.0 - Compress Releases                     ║
+echo ║                 StockControl v2.0 - Compress Releases                     ║
 echo ║                                                                           ║
 echo ║  Comprimindo executáveis para upload no GitHub...                         ║
 echo ║                                                                           ║
@@ -55,11 +55,11 @@ set SUCCESS_COUNT=0
 set FAIL_COUNT=0
 
 REM Listar plataformas
-set PLATFORMS[0]=StockControl-v1.0-Windows-x64
-set PLATFORMS[1]=StockControl-v1.0-Windows-x86
-set PLATFORMS[2]=StockControl-v1.0-Linux-x64
-set PLATFORMS[3]=StockControl-v1.0-macOS-x64
-set PLATFORMS[4]=StockControl-v1.0-macOS-ARM64
+set PLATFORMS[0]=StockControl-v2.0-Windows-x64
+set PLATFORMS[1]=StockControl-v2.0-Windows-x86
+set PLATFORMS[2]=StockControl-v2.0-Linux-x64
+set PLATFORMS[3]=StockControl-v2.0-macOS-x64
+set PLATFORMS[4]=StockControl-v2.0-macOS-ARM64
 
 REM Verificar se PowerShell está disponível e usar Compress-Archive
 for /L %%i in (0,1,4) do (
@@ -110,7 +110,7 @@ echo ═════════════════════════
 echo Próximos passos:
 echo   1. Vá para: https://github.com/seu-usuario/StockControl/releases
 echo   2. Clique em "Create a new release"
-echo   3. Tag: v1.0
+echo   3. Tag: v2.0
 echo   4. Upload dos arquivos em: %COMPRESSED_DIR%
 echo ════════════════════════════════════════════════════════════════════════════
 echo.
