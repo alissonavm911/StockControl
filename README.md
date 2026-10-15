@@ -435,26 +435,27 @@ Para relatórios de bugs, sugestões ou dúvidas:
 
 ---
 
-## 🎯 Roadmap Futuro
+## 📦 Releases Disponíveis
 
-- [ ] Interface gráfica (WPF/MAUI)
-- [ ] API REST para integração
-- [ ] Banco de dados SQL
-- [ ] Autenticação de usuários
-- [ ] Dashboard com gráficos
-- [ ] Importação em lote (CSV/Excel)
-- [ ] Histórico de alterações (audit log)
-- [ ] Backup automático em nuvem
+| Plataforma | Download | Status |
+|------------|----------|--------|
+| **Windows x64** | [StockControl-v2.0-Windows-x64.zip](#) | ✅ Pronto |
+| **Windows x86** | [StockControl-v2.0-Windows-x86.zip](#) | ✅ Pronto |
+| **Linux x64** | [StockControl-v2.0-Linux-x64.zip](#) | ✅ Pronto |
+| **macOS x64** | [StockControl-v2.0-macOS-x64.zip](#) | ✅ Pronto |
+| **macOS ARM64** | [StockControl-v2.0-macOS-ARM64.zip](#) | ✅ Pronto |
+
+**Tamanho**: ~200-300 MB por plataforma (runtime incluído)
 
 ---
 
-## 📊 Versão
+## 📊 Versão Final (v2.0.0)
 
-**Stock Control v1.0.0**
-- Lançamento: Outubro 2026
+**Stock Control v2.0.0**
+- Lançamento: 2026-10-15
+- Status: **Versão Final e Definitiva** (Projeto Completo)
 - Framework: .NET 10
-- Linguagem: C#
+- Linguagem: C# 13
+- Funcionalidades: Gestão completa de inventário, cadastro de vendas, persistência JSON e relatórios consolidados em TXT e PDF.
 
----
-
-Desenvolvido com ❤️ para gestão eficiente de estoque e vendas.
+Desenvolvido com ❤️ como solução final e completa para controle de estoque e vendas.
