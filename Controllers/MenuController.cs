@@ -45,7 +45,7 @@ namespace StockControl.Controllers
                     Console.SetCursorPosition(leftMargin, 11);
                     Console.WriteLine("9. View Sales ");
                     Console.SetCursorPosition(leftMargin, 12);
-                    Console.WriteLine("10. Financial Report (Not Implemented)");
+                    Console.WriteLine("10. Financial Report");
                     Console.SetCursorPosition(leftMargin, 14);
                     Console.WriteLine("0. Exit");
                     Console.SetCursorPosition(leftMargin, 16);

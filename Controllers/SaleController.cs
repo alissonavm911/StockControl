@@ -203,7 +203,9 @@ namespace StockControl.Controllers
 
                     var sale = sales[page];
                     var items = sale.Items ?? new List<SaleItem>();
-                    var itemLines = Math.Max(1, items.Count);
+                    var maxItemLines = Math.Max(1, Console.WindowHeight - 14);
+                    var visibleItems = items.Take(maxItemLines).ToList();
+                    var itemLines = Math.Max(1, visibleItems.Count);
                     Console.Clear();
                     Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
                     Background.MenuBorder(10 + itemLines, GetBorderWidth());
@@ -227,9 +229,9 @@ namespace StockControl.Controllers
                     }
                     else
                     {
-                        for (int i = 0; i < items.Count; i++)
+                        for (int i = 0; i < visibleItems.Count; i++)
                         {
-                            var item = items[i];
+                            var item = visibleItems[i];
                             Console.SetCursorPosition(leftMargin, 8 + i);
                             Console.WriteLine(
                                 $"Name: {item.Product.Name} | Quantity: {item.Quantity} | Value: {item.Value:C}");
@@ -258,6 +260,93 @@ namespace StockControl.Controllers
             catch (Exception ex)
             {
                 HandlerException.HandleException(new ErrorOperationException(ex.Message));
+            }
+        }
+
+        public static void ExportFinancialReport()
+        {
+            if (!ConsoleSize.EnsureMinimumSize())
+            {
+                return;
+            }
+
+            try
+            {
+                var report = SaleService.GetFinancialReport();
+                if (report == null)
+                {
+                    return;
+                }
+
+                const int leftMargin = 3;
+                Console.Clear();
+                Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+                Background.MenuBorder(11, 90);
+                Console.SetCursorPosition(leftMargin, 2);
+                Console.WriteLine("Financial Report");
+                Console.SetCursorPosition(leftMargin, 4);
+                Console.WriteLine($"Sales: {report.SaleCount}");
+                Console.SetCursorPosition(leftMargin, 5);
+                Console.WriteLine($"Total revenue: {report.TotalRevenue:C}");
+                Console.SetCursorPosition(leftMargin, 6);
+                Console.WriteLine($"Products to restock: {report.RestockProductNames.Count}");
+                Console.SetCursorPosition(leftMargin, 8);
+                Console.WriteLine("The export includes restock alerts, top products and all sales.");
+                Console.SetCursorPosition(leftMargin, 9);
+                Console.WriteLine("1. TXT");
+                Console.SetCursorPosition(leftMargin, 10);
+                Console.Write("2. PDF | Select format: ");
+
+                if (!int.TryParse(Console.ReadLine(), out var formatSelection) ||
+                    !Enum.IsDefined(typeof(InventoryReportFormat), formatSelection))
+                {
+                    HandlerException.HandleException(
+                        new OptionNotFoundException("Select 1 for TXT or 2 for PDF."));
+                    return;
+                }
+
+                Console.Clear();
+                Background.MenuColor(ConsoleColor.DarkCyan, ConsoleColor.White);
+                Background.MenuBorder(7, 90);
+                Console.SetCursorPosition(leftMargin, 2);
+                Console.WriteLine("Export Financial Report");
+                Console.SetCursorPosition(leftMargin, 4);
+                Console.WriteLine("Enter the destination file path (the extension is optional):");
+                Console.SetCursorPosition(leftMargin, 6);
+                Console.Write("Path: ");
+                var destinationPath = Console.ReadLine();
+
+                var format = (InventoryReportFormat)formatSelection;
+                var exportedPath = FinancialReportExporter.Export(report, destinationPath, format);
+                if (exportedPath == null)
+                {
+                    return;
+                }
+
+                Console.Clear();
+                Background.MenuBorder(6, 90);
+                Console.SetCursorPosition(leftMargin, 2);
+                Console.WriteLine("Financial report exported successfully.");
+                Console.SetCursorPosition(leftMargin, 3);
+                Console.WriteLine($"Format: {format}");
+                Console.SetCursorPosition(leftMargin, 4);
+                Console.WriteLine($"File: {exportedPath}");
+                Console.SetCursorPosition(leftMargin, 5);
+                Console.WriteLine("Press any key to return to the menu...");
+                Console.ReadKey(true);
+            }
+            catch (InvalidPathException ex)
+            {
+                HandlerException.HandleException(ex);
+            }
+            catch (FileOperationException ex)
+            {
+                HandlerException.HandleException(ex);
+            }
+            catch (Exception ex)
+            {
+                HandlerException.HandleException(new ErrorOperationException(
+                    "Error occurred while generating the financial report: " + ex.Message));
             }
         }
 

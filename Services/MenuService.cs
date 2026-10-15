@@ -11,7 +11,12 @@ namespace StockControl.Services
         {
             try
             {
-                uint optionSelected = uint.TryParse(option, out uint optionInt) ? optionInt : 10;
+                if (!uint.TryParse(option, out var optionSelected))
+                {
+                    HandlerException.HandleException(
+                        new OptionNotFoundException("Option not found. Please enter a valid option."));
+                    return;
+                }
 
                 switch (optionSelected)
                 {
@@ -24,7 +29,7 @@ namespace StockControl.Services
                     case 7: SaleController.AddSale(); break;
                     case 8: SaleController.RemoveSale(); break;
                     case 9: SaleController.ViewSales(); break;
-                    case 10: break;
+                    case 10: SaleController.ExportFinancialReport(); break;
                     case 0: Exit.ExitProgram(); break;
                     default: HandlerException.HandleException(new OptionNotFoundException("Option not found. Please enter a valid option.")); break;
                 }

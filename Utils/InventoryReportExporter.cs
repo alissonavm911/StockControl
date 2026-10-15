@@ -2,7 +2,6 @@ using System.Globalization;
 using System.Text;
 using PdfSharp;
 using PdfSharp.Drawing;
-using PdfSharp.Fonts;
 using PdfSharp.Pdf;
 using StockControl.Exceptions;
 using StockControl.Models;
@@ -156,10 +155,7 @@ namespace StockControl.Utils
 
         private static void WritePdf(string path, InventoryReport report)
         {
-            if (OperatingSystem.IsWindows())
-            {
-                GlobalFontSettings.UseWindowsFontsUnderWindows = true;
-            }
+            PdfFontSetup.EnsureWindowsFonts();
 
             using var document = new PdfDocument();
             var page = document.AddPage();
