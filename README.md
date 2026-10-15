@@ -435,19 +435,6 @@ Para relatórios de bugs, sugestões ou dúvidas:
 
 ---
 
-## 🎯 Roadmap Futuro
-
-- [ ] Interface gráfica (WPF/MAUI)
-- [ ] API REST para integração
-- [ ] Banco de dados SQL
-- [ ] Autenticação de usuários
-- [ ] Dashboard com gráficos
-- [ ] Importação em lote (CSV/Excel)
-- [ ] Histórico de alterações (audit log)
-- [ ] Backup automático em nuvem
-
----
-
 ## 📊 Versão
 
 **Stock Control v1.0.0**
